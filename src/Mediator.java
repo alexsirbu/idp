@@ -59,8 +59,8 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void addPeer(String name) {
-		peers.add(new Peer(name));
+	public void addPeer(String name, ArrayList<File> sharedFiles) {
+		peers.add(new Peer(name, sharedFiles));
 	}
 	
 	/*
@@ -73,7 +73,7 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void updatePeerSharedFiles(String peerName, ArrayList<File> files) {
+	public void updatePeerSharedFiles(String peerName, ArrayList<File> sharedFiles) {
 		
 	}
 }
