@@ -265,4 +265,17 @@ public class GUI extends JPanel {
 				break;
 			}
 	}
+	
+	/*
+	 * 
+	 */
+	public void updateFiles(Peer peer) {
+		if (((String)(peersList.getSelectedValue())).equals(peer.getName()))
+		{
+			filesModel.clear();
+			
+			for(int i=0; i<peer.getSharedFiles().size(); i++)
+				filesModel.addElement(peer.getSharedFiles().get(i).getName());
+		}
+	}
 }
