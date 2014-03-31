@@ -1,11 +1,14 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
 public class Main extends JPanel {
 	
-	private DefaultListModel	clients;										// list model
-	private JList				list, mirror;								// lists
+	private DefaultListModel	peersModel, filesModel;										// list model
+	private JList				peersList, filesList;						
+	private JTable				downloadsTable;
+	private CustomTableModel	downloadsModel;
 	
 	public Main() {
 		init();
@@ -14,12 +17,32 @@ public class Main extends JPanel {
 	public void init() {
 		
 		JPanel top = new JPanel(new GridLayout(1, 0));
-		JPanel bottom = new JPanel(new FlowLayout());
+		JPanel bottom = new JPanel(new GridLayout(1, 1));
 		this.setLayout(new BorderLayout());
 		this.add(top, BorderLayout.CENTER);
 		this.add(bottom, BorderLayout.SOUTH);
-		top.add(new JScrollPane());
-		top.add(new JScrollPane());
+		
+		peersModel = new DefaultListModel();
+		filesModel = new DefaultListModel();
+		
+		Object[] columnNames = {
+			"Source",
+			"Destination",
+			"Name",
+			"Progress",
+			"State"
+		};
+		downloadsModel = new CustomTableModel();
+		downloadsModel.setColumnIdentifiers(columnNames);
+		
+		peersList = new JList(peersModel);
+		filesList = new JList(filesModel);
+		downloadsTable = new JTable(downloadsModel);
+				
+		top.add(new JScrollPane(peersList));
+		top.add(new JScrollPane(filesList));
+		bottom.add(new JScrollPane(downloadsTable));
+		
 		
 		
 		/*
