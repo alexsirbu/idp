@@ -45,11 +45,8 @@ public class Mediator {
 	public Peer getPeerByName(String peerName) {
 		for(int i=0; i<peers.size(); i++)
 			if (peers.get(i).getName().equals(peerName))
-			{
 				return peers.get(i);
-			}
 	
-		assert(false);
 		return null;
 	}
 	
@@ -76,27 +73,28 @@ public class Mediator {
 	 * 
 	 */
 	public void addPeer(String name, ArrayList<File> sharedFiles) {
-		peers.add(new Peer(name, sharedFiles));
+		Peer peer = new Peer(name, sharedFiles);
+		peers.add(peer);
+		gui.addPeer(peer);
 	}
 	
 	/*
 	 * 
 	 */
-	public void deletePeer(String name) {
+	public void deletePeer(String peerName) {
+		Peer peer = getPeerByName(peerName);
+		if(peer == null)
+			return;
 		
+		peers.remove(peer);
+		gui.deletePeer(peer);
 	}
 	
 	/*
 	 * 
 	 */
 	public void updatePeer(String peerName, ArrayList<File> sharedFiles) {
-		Peer peer = null;
-		
-		for(int i = 0; i < peers.size(); i++) {
-			if(peers.get(i).getName().equals(peerName))
-				peer = peers.get(i);
-		}
-		
+		Peer peer = getPeerByName(peerName);
 		if(peer == null)
 			return;
 		
