@@ -45,14 +45,20 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void updateFileSendProgress() {
+	public void updateTransfer(String fileName, int chunckSize) {
+		Transfer transfer = null;
 		
-	}
-	
-	/*
-	 * 
-	 */
-	public void updateFileReceiveProgress() {
+		for(int i = 0; i < transfers.size(); i++) {
+			if(transfers.get(i).getFile().getName().equals(fileName))
+				transfer = transfers.get(i);
+		}
+		
+		if(transfer == null)
+			return;
+		
+		int fileSize = transfer.getFile().getSize();
+		int chunckSizeAsPercentage = chunckSize / fileSize * 100;
+		
 		
 	}
 	
@@ -73,7 +79,17 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void updatePeerSharedFiles(String peerName, ArrayList<File> sharedFiles) {
+	public void updatePeer(String peerName, ArrayList<File> sharedFiles) {
+		Peer peer = null;
 		
+		for(int i = 0; i < peers.size(); i++) {
+			if(peers.get(i).getName().equals(peerName))
+				peer = peers.get(i);
+		}
+		
+		if(peer == null)
+			return;
+		
+		peer.setSharedFiles(sharedFiles);
 	}
 }
