@@ -1,5 +1,8 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -38,12 +41,69 @@ public class Main extends JPanel {
 		peersList = new JList(peersModel);
 		filesList = new JList(filesModel);
 		downloadsTable = new JTable(downloadsModel);
-				
+		
+		peersModel.addElement("first peer");
+		peersModel.addElement("second peer");
+	
 		top.add(new JScrollPane(peersList));
 		top.add(new JScrollPane(filesList));
 		bottom.add(new JScrollPane(downloadsTable));
 		
+		peersList.addListSelectionListener(new ListSelectionListener(){
+
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+			
+				System.out.println(peersList.getSelectedIndex());
+				filesModel.clear();
+				String value = (String)peersList.getSelectedValue();
+				filesModel.addElement(value+" first file");
+				filesModel.addElement(value+" second file");
+				
+				
+			}
+		}
+		);
 		
+		filesList.addListSelectionListener(new ListSelectionListener(){
+
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				
+				int rows = downloadsModel.getRowCount();
+				
+				boolean alreadyDownloading = false;
+				
+				String peerName = ((String)(peersList.getSelectedValue()));
+				String fileName = ((String)(filesList.getSelectedValue()));
+				
+				for(int i=0; i<rows; i++)
+				{
+					String presentPeerName = (String)(downloadsModel.getValueAt(i, 0));
+					String presentFileName = (String)(downloadsModel.getValueAt(i, 2));
+					
+					if (presentPeerName.equals(peerName) && presentFileName.equals(fileName))
+					{
+						alreadyDownloading = true;
+						break;
+					}
+				}
+				if (!alreadyDownloading)
+				{
+					Object[] rowData =
+						{
+							peerName,
+							"__MYSELF__",
+							fileName,
+							"none",
+							"Receiving"
+						};
+					downloadsModel.addRow(rowData);
+				}
+				
+			}
+			
+		});
 		
 		/*
 		// initialize model
