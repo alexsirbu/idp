@@ -173,18 +173,16 @@ public class GUI extends JPanel {
 					
 					if (!alreadyDownloading)
 					{
-						ArrayList<Transfer> transfers = mediator.getTransfers();
-						
 						Peer peer = mediator.getPeerByName(peerName);
 						Peer myself = mediator.getPeerByName(Main.MY_PEER_NAME);
 						File file = peer.getSharedFileByName(fileName);
 						
-						transfers.add(new Transfer(file, peer, myself));
+						mediator.addOutgoingTransfer(new Transfer(file, peer, myself));
 						
 						Object[] rowData =
 							{
 								peerName,
-								"__MYSELF__",
+								Main.MY_PEER_NAME,
 								fileName,
 								new JProgressBar(0, 10),
 								"Receiving"
@@ -239,6 +237,8 @@ public class GUI extends JPanel {
 			if (currentSenderName.equals(transfer.getSender().getName()) && currentFileName.equals(transfer.getFile().getName()))
 			{
 				((JProgressBar)downloadsModel.getValueAt(i, 3)).setValue(transfer.getProgress());
+				if (transfer.getProgress() == 100)
+					downloadsModel.setValueAt("Completed", i, 4);
 				break;
 			}
 		}
@@ -277,5 +277,20 @@ public class GUI extends JPanel {
 			for(int i=0; i<peer.getSharedFiles().size(); i++)
 				filesModel.addElement(peer.getSharedFiles().get(i).getName());
 		}
+	}
+	
+	/*
+	 * 
+	 */
+	public void addIncomingTransfer(Transfer transfer) {
+		Object[] rowData =
+			{
+				transfer.getSender().getName(),
+				transfer.getReceiver().getName(),
+				transfer.getFile().getName(),
+				new JProgressBar(0, 10),
+				"Sending"
+			};
+		downloadsModel.addRow(rowData);
 	}
 }
