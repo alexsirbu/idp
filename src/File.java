@@ -1,5 +1,4 @@
 /**
- * @author cristian
  *
  */
 public class File {
@@ -12,6 +11,7 @@ public class File {
 	 */
 	private int size;
 
+	
 	/*
 	 * 
 	 */

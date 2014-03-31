@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 /*
- * @author cristian
  * 
  */
 public class Mediator {
@@ -17,13 +16,16 @@ public class Mediator {
 	 * 
 	 */
 	private ArrayList<Transfer> transfers;
+	/*
+	 * 
+	 */
+	private Peer localPeer;
 	
 	
 	/*
 	 * 
 	 */
-	public Mediator()
-	{
+	public Mediator(String localPeerName) {
 		peers = new ArrayList<Peer>();
 		transfers = new ArrayList<Transfer>();
 	}
@@ -38,8 +40,15 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public Peer getPeerByName(String peerName) {
-		for(int i=0; i<peers.size(); i++)
+	public Peer getLocalPeer() {
+		return localPeer;
+	}
+	
+	/*
+	 * 
+	 */
+	public Peer getPeer(String peerName) {
+		for(int i = 0; i < peers.size(); i++)
 			if (peers.get(i).getName().equals(peerName))
 				return peers.get(i);
 	
@@ -49,8 +58,9 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void addPeer(String name, ArrayList<File> sharedFiles) {
-		Peer peer = new Peer(name, sharedFiles);
+	public void addPeer(String peerName, ArrayList<File> sharedFiles) {
+		Peer peer = new Peer(peerName, sharedFiles);
+		
 		peers.add(peer);
 		gui.addPeer(peer);
 	}
@@ -58,8 +68,18 @@ public class Mediator {
 	/*
 	 * 
 	 */
+	public void addLocalPeer(String localPeerName, ArrayList<File> sharedFiles) {
+		assert localPeer == null;
+		
+		addPeer(localPeerName, sharedFiles);
+		localPeer = getPeer(localPeerName);
+	}
+	
+	/*
+	 * 
+	 */
 	public void deletePeer(String peerName) {
-		Peer peer = getPeerByName(peerName);
+		Peer peer = getPeer(peerName);
 		if(peer == null)
 			return;
 		
@@ -70,8 +90,8 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void updatePeer(String peerName, ArrayList<File> sharedFiles) {
-		Peer peer = getPeerByName(peerName);
+	public void updatePeerSharedFiles(String peerName, ArrayList<File> sharedFiles) {
+		Peer peer = getPeer(peerName);
 		if(peer == null)
 			return;
 		
@@ -81,46 +101,43 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void addTransferRequest(Transfer transfer) {
+	public void addTransferOutgoingRequest(Transfer transfer) {
 		transfers.add(transfer);
 	}
 	
 	/*
 	 * 
 	 */
-	public void addTransferIncomingRequest(String requesterName, String fileName) {
-		Peer requesterPeer = getPeerByName(requesterName);
-		if(requesterPeer == null)
+	public void addTransferIncomingRequest(String requestingPeerName, String fileName) {
+		Peer requestingPeer = getPeer(requestingPeerName);
+		if(requestingPeer == null)
 			return;
 		
-		Peer myPeer = getPeerByName(Main.MY_PEER_NAME);
-		assert myPeer != null;
-		
-		File file = myPeer.getSharedFileByName(fileName);
-		if(file == null)
+		File requestedFile = localPeer.getSharedFile(fileName);
+		if(requestedFile == null)
 			return;
 		
-		Transfer transfer = new Transfer(file, myPeer, requesterPeer);
+		Transfer transfer = new Transfer(requestedFile, localPeer, requestingPeer);
 		transfers.add(transfer);
-		gui.addIncomingTransfer(transfer);
+		gui.addTransferIncomingRequest(transfer);
 	}
 	
 	/*
 	 * 
 	 */
-	public void updateTransferProgress(String senderName, String fileName, int chunckSize) {
+	public void updateTransferProgress(String sendingPeerName, String fileName, int chunkSize) {
 		Transfer transfer = null;
 		
 		for(int i = 0; i < transfers.size(); i++) {
 			if(transfers.get(i).getFile().getName().equals(fileName)
-					&& transfers.get(i).getSender().getName().equals(senderName))
+					&& transfers.get(i).getSendingPeer().getName().equals(sendingPeerName))
 				transfer = transfers.get(i);
 		}
 		
 		if(transfer == null)
 			return;
 		
-		transfer.updateProgress(chunckSize);
+		transfer.updateProgress(chunkSize);
 		gui.updateTransferProgress(transfer);
 	}
 }

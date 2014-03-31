@@ -1,5 +1,4 @@
 /**
- * @author cristian
  *
  */
 public class Transfer {
@@ -10,23 +9,24 @@ public class Transfer {
 	/*
 	 * 
 	 */
-	private Peer sender;
+	private Peer sendingPeer;
 	/*
 	 * 
 	 */
-	private Peer receiver;
+	private Peer receivingPeer;
 	/*
 	 * 
 	 */
 	private int progress;
+	
 	
 	/*
 	 * 
 	 */
 	public Transfer(File file, Peer sender, Peer receiver) {
 		this.file = file;
-		this.sender = sender;
-		this.receiver = receiver;
+		this.sendingPeer = sender;
+		this.receivingPeer = receiver;
 		this.progress = 0;
 	}
 	
@@ -40,15 +40,15 @@ public class Transfer {
 	/*
 	 * 
 	 */
-	public Peer getSender() {
-		return sender;
+	public Peer getSendingPeer() {
+		return sendingPeer;
 	}
 	
 	/*
 	 * 
 	 */
-	public Peer getReceiver() {
-		return receiver;
+	public Peer getReceivingPeer() {
+		return receivingPeer;
 	}
 
 	/*

@@ -1,17 +1,20 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 /**
- * @author cristian
  *
  */
 public class GUI extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 	/*
 	 * 
 	 */
@@ -25,6 +28,7 @@ public class GUI extends JPanel {
 	 */
 	private static int FRAME_HEIGHT = 600;
 	
+	
 	/*
 	 * 
 	 */
@@ -32,36 +36,38 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	private DefaultListModel	peersModel;
+	private DefaultListModel<Object> peersModel;
 	/*
 	 * 
 	 */
-	private DefaultListModel	filesModel;
+	private DefaultListModel<Object> filesModel;
 	/*
 	 * 
 	 */
-	private JList				peersList;
+	private CustomTableModel transfersModel;
 	/*
 	 * 
 	 */
-	private JList				filesList;
+	private JList<Object> peersList;
 	/*
 	 * 
 	 */
-	private JTable				downloadsTable;
-	/*
-	 * 
-	 */
-	private CustomTableModel	downloadsModel;
+	private JList<Object> filesList;
 	
 	/*
 	 * 
 	 */
-	public GUI(Mediator mediator) {
+	private JTable transfersTable;
+	
+	
+	/*
+	 * 
+	 */
+	public GUI(Mediator mediator) throws Exception {
 		this.mediator = mediator;
 		
 		final GUI gui = this;
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
 				gui.build();
 			}
@@ -82,87 +88,86 @@ public class GUI extends JPanel {
 	public void buildContent() {
 		JPanel top = new JPanel(new GridLayout(1, 0));
 		JPanel bottom = new JPanel(new GridLayout(1, 1));
+		
 		this.setLayout(new BorderLayout());
+		
 		this.add(top, BorderLayout.CENTER);
 		this.add(bottom, BorderLayout.SOUTH);
 		
-		peersModel = new DefaultListModel();
-		filesModel = new DefaultListModel();
+		peersModel = new DefaultListModel<Object>();
+		filesModel = new DefaultListModel<Object>();
 		
-		Object[] columnNames = {
+		transfersModel = new CustomTableModel();
+		transfersModel.setColumnIdentifiers(new Object[] {
 			"Source",
 			"Destination",
 			"Name",
 			"Progress",
 			"State"
-		};
-		downloadsModel = new CustomTableModel();
-		downloadsModel.setColumnIdentifiers(columnNames);
+		});
 		
-		peersList = new JList(peersModel);
-		filesList = new JList(filesModel);
-		downloadsTable = new JTable(downloadsModel);
+		peersList = new JList<Object>(peersModel);
+		filesList = new JList<Object>(filesModel);
+		transfersTable = new JTable(transfersModel);
 		
-		TableColumnModel tableColumnModel = downloadsTable.getColumnModel();
+		TableColumnModel tableColumnModel = transfersTable.getColumnModel();
 		TableColumn progressBarColumn = tableColumnModel.getColumn(3);
 		progressBarColumn.setCellRenderer(new CustomCellRenderer());
-		
-		//peersModel.addElement("first peer");
-		//peersModel.addElement("second peer");
 	
 		top.add(new JScrollPane(peersList));
 		top.add(new JScrollPane(filesList));
-		bottom.add(new JScrollPane(downloadsTable));
-				
-		peersList.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				filesModel.clear();
-				String peerName = (String)peersList.getSelectedValue();
-				
-				Peer peer = mediator.getPeerByName(peerName);
-				for(int j=0; j<peer.getSharedFiles().size(); j++)
-					filesModel.addElement(peer.getSharedFiles().get(j));
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-			}
-		}
-		);
 		
-		filesList.addMouseListener(new MouseListener(){
-
+		bottom.add(new JScrollPane(transfersTable));
+				
+		peersList.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				String peerName = (String)peersList.getSelectedValue();
+				Peer peer = mediator.getPeer(peerName);
 				
-				if (e.getClickCount() == 2)
+				filesModel.clear();
+				for(int j = 0; j < peer.getSharedFiles().size(); j++)
+					filesModel.addElement(peer.getSharedFiles().get(j).getName());
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+			}
+		});
+		
+		filesList.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2)
 				{
 				
-					int rows = downloadsModel.getRowCount();
+					int rows = transfersModel.getRowCount();
 					
 					boolean alreadyDownloading = false;
 					
 					String peerName = ((String)(peersList.getSelectedValue()));
 					String fileName = ((String)(filesList.getSelectedValue()));
 					
-					for(int i=0; i<rows; i++)
+					for(int i = 0; i < rows; i++)
 					{
-						String presentPeerName = (String)(downloadsModel.getValueAt(i, 0));
-						String presentFileName = (String)(downloadsModel.getValueAt(i, 2));
+						String presentPeerName = (String)(transfersModel.getValueAt(i, 0));
+						String presentFileName = (String)(transfersModel.getValueAt(i, 2));
 						
 						if (presentPeerName.equals(peerName) && presentFileName.equals(fileName))
 						{
@@ -171,42 +176,44 @@ public class GUI extends JPanel {
 						}
 					}
 					
-					if (!alreadyDownloading)
+					if(!alreadyDownloading)
 					{
-						Peer peer = mediator.getPeerByName(peerName);
-						Peer myself = mediator.getPeerByName(Main.MY_PEER_NAME);
-						File file = peer.getSharedFileByName(fileName);
+						Peer peer = mediator.getPeer(peerName);
+						Peer myself = mediator.getLocalPeer();
+						File file = peer.getSharedFile(fileName);
 						
-						mediator.addTransferRequest(new Transfer(file, peer, myself));
+						transfersModel.addRow(new Object[] {
+							peerName,
+							myself.getName(),
+							fileName,
+							new JProgressBar(0, 10),
+							"Receiving"
+						});
 						
-						Object[] rowData =
-							{
-								peerName,
-								Main.MY_PEER_NAME,
-								fileName,
-								new JProgressBar(0, 10),
-								"Receiving"
-							};
-						downloadsModel.addRow(rowData);
+						mediator.addTransferOutgoingRequest(new Transfer(file, peer, myself));
 					}
 				}
 					
 			}
 			
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
+			public void mouseEntered(MouseEvent e) {
+				
 			}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {
+			public void mouseExited(MouseEvent e) {
+				
 			}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {
+			public void mousePressed(MouseEvent e) {
+				
 			}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
+			public void mouseReleased(MouseEvent e) {
+				
 			}			
 		});
 	}
@@ -226,28 +233,8 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	public void updateTransferProgress(Transfer transfer) {
-		int rows = downloadsModel.getRowCount();
-		
-		for(int i=0; i<rows; i++)
-		{
-			String currentSenderName = (String)(downloadsModel.getValueAt(i, 0));
-			String currentFileName = (String)(downloadsModel.getValueAt(i, 2));
-			
-			if (currentSenderName.equals(transfer.getSender().getName()) && currentFileName.equals(transfer.getFile().getName()))
-			{
-				((JProgressBar)downloadsModel.getValueAt(i, 3)).setValue(transfer.getProgress());
-				if (transfer.getProgress() == 100)
-					downloadsModel.setValueAt("Completed", i, 4);
-				break;
-			}
-		}
-	}
-	
-	/*
-	 * 
-	 */
 	public void addPeer(Peer peer) {
+		assert peersModel != null;
 		peersModel.addElement(peer.getName());
 	}
 	
@@ -255,26 +242,28 @@ public class GUI extends JPanel {
 	 * 
 	 */
 	public void deletePeer(Peer peer) {
-		if (((String)(peersList.getSelectedValue())).equals(peer.getName()))
+		if(((String)(peersList.getSelectedValue())).equals(peer.getName()))
 			filesModel.clear();		
 		
-		for(int i=0; i<peersModel.getSize(); i++)
-			if (((String)(peersModel.getElementAt(i))).equals(peer.getName()))
+		for(int i = 0; i < peersModel.getSize(); i++)
+		{
+			if(((String)(peersModel.getElementAt(i))).equals(peer.getName()))
 			{
 				peersModel.remove(i);
 				break;
 			}
+		}
 	}
 	
 	/*
 	 * 
 	 */
-	public void updateFiles(Peer peer) {
-		if (((String)(peersList.getSelectedValue())).equals(peer.getName()))
+	public void updatePeerFiles(Peer peer) {
+		if(((String)(peersList.getSelectedValue())).equals(peer.getName()))
 		{
 			filesModel.clear();
 			
-			for(int i=0; i<peer.getSharedFiles().size(); i++)
+			for(int i = 0; i < peer.getSharedFiles().size(); i++)
 				filesModel.addElement(peer.getSharedFiles().get(i).getName());
 		}
 	}
@@ -282,15 +271,35 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	public void addIncomingTransfer(Transfer transfer) {
-		Object[] rowData =
+	public void addTransferIncomingRequest(Transfer transfer) {
+		transfersModel.addRow(new Object[] {
+			transfer.getSendingPeer().getName(),
+			transfer.getReceivingPeer().getName(),
+			transfer.getFile().getName(),
+			new JProgressBar(0, 10),
+			"Sending"
+		});
+	}
+	
+	/*
+	 * 
+	 */
+	public void updateTransferProgress(Transfer transfer) {
+		int rows = transfersModel.getRowCount();
+		
+		for(int i = 0; i < rows; i++)
+		{
+			String currentSenderName = (String)(transfersModel.getValueAt(i, 0));
+			String currentFileName = (String)(transfersModel.getValueAt(i, 2));
+			
+			if(currentSenderName.equals(transfer.getSendingPeer().getName())
+					&& currentFileName.equals(transfer.getFile().getName()))
 			{
-				transfer.getSender().getName(),
-				transfer.getReceiver().getName(),
-				transfer.getFile().getName(),
-				new JProgressBar(0, 10),
-				"Sending"
-			};
-		downloadsModel.addRow(rowData);
+				((JProgressBar)transfersModel.getValueAt(i, 3)).setValue(transfer.getProgress());
+				if (transfer.getProgress() == 100)
+					transfersModel.setValueAt("Completed", i, 4);
+				break;
+			}
+		}
 	}
 }

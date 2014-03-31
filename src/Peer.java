@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 /**
- * @author cristian
  *
  */
 public class Peer {
@@ -13,6 +12,7 @@ public class Peer {
 	 * 
 	 */
 	private ArrayList<File> sharedFiles;
+	
 	
 	/*
 	 * 
@@ -46,21 +46,18 @@ public class Peer {
 	/*
 	 * 
 	 */
-	public File getSharedFileByName(String fileName) {
-		for(int i=0; i<sharedFiles.size(); i++)
-			if (sharedFiles.get(i).getName().equals(fileName))
-			{
-				return sharedFiles.get(i);
-			}
-	
-		assert(false);
-		return null;
+	public void setSharedFiles(ArrayList<File> sharedFiles) {
+		this.sharedFiles = sharedFiles;
 	}
 	
 	/*
 	 * 
 	 */
-	public void setSharedFiles(ArrayList<File> sharedFiles) {
-		this.sharedFiles = sharedFiles;
+	public File getSharedFile(String fileName) {
+		for(int i = 0; i < sharedFiles.size(); i++)
+			if (sharedFiles.get(i).getName().equals(fileName))
+				return sharedFiles.get(i);
+	
+		return null;
 	}
 }
