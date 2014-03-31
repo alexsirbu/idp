@@ -48,59 +48,92 @@ public class Main extends JPanel {
 		top.add(new JScrollPane(peersList));
 		top.add(new JScrollPane(filesList));
 		bottom.add(new JScrollPane(downloadsTable));
-		
-		peersList.addListSelectionListener(new ListSelectionListener(){
+				
+		peersList.addMouseListener(new MouseListener(){
 
 			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-			
+			public void mouseClicked(MouseEvent e) {
 				System.out.println(peersList.getSelectedIndex());
 				filesModel.clear();
 				String value = (String)peersList.getSelectedValue();
 				filesModel.addElement(value+" first file");
 				filesModel.addElement(value+" second file");
-				
-				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
 			}
 		}
 		);
 		
-		filesList.addListSelectionListener(new ListSelectionListener(){
+		filesList.addMouseListener(new MouseListener(){
 
 			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
 				
-				int rows = downloadsModel.getRowCount();
-				
-				boolean alreadyDownloading = false;
-				
-				String peerName = ((String)(peersList.getSelectedValue()));
-				String fileName = ((String)(filesList.getSelectedValue()));
-				
-				for(int i=0; i<rows; i++)
+				if (e.getClickCount() == 2)
 				{
-					String presentPeerName = (String)(downloadsModel.getValueAt(i, 0));
-					String presentFileName = (String)(downloadsModel.getValueAt(i, 2));
+				
+					int rows = downloadsModel.getRowCount();
 					
-					if (presentPeerName.equals(peerName) && presentFileName.equals(fileName))
+					boolean alreadyDownloading = false;
+					
+					String peerName = ((String)(peersList.getSelectedValue()));
+					String fileName = ((String)(filesList.getSelectedValue()));
+					
+					for(int i=0; i<rows; i++)
 					{
-						alreadyDownloading = true;
-						break;
+						String presentPeerName = (String)(downloadsModel.getValueAt(i, 0));
+						String presentFileName = (String)(downloadsModel.getValueAt(i, 2));
+						
+						if (presentPeerName.equals(peerName) && presentFileName.equals(fileName))
+						{
+							alreadyDownloading = true;
+							break;
+						}
+					}
+					if (!alreadyDownloading)
+					{
+						Object[] rowData =
+							{
+								peerName,
+								"__MYSELF__",
+								fileName,
+								"none",
+								"Receiving"
+							};
+						downloadsModel.addRow(rowData);
 					}
 				}
-				if (!alreadyDownloading)
-				{
-					Object[] rowData =
-						{
-							peerName,
-							"__MYSELF__",
-							fileName,
-							"none",
-							"Receiving"
-						};
-					downloadsModel.addRow(rowData);
-				}
-				
+					
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
 			}
 			
 		});
