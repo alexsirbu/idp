@@ -228,7 +228,7 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	public void updateProgress(Transfer transfer) {
+	public void updateTransferProgress(Transfer transfer) {
 		int rows = downloadsModel.getRowCount();
 		
 		for(int i=0; i<rows; i++)
