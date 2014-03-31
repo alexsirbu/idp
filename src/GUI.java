@@ -228,7 +228,19 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	public void updateTransferProgress(Transfer transfer) {
+	public void updateProgress(Transfer transfer) {
+		int rows = downloadsModel.getRowCount();
 		
+		for(int i=0; i<rows; i++)
+		{
+			String currentSenderName = (String)(downloadsModel.getValueAt(i, 0));
+			String currentFileName = (String)(downloadsModel.getValueAt(i, 2));
+			
+			if (currentSenderName.equals(transfer.getSender().getName()) && currentFileName.equals(transfer.getFile().getName()))
+			{
+				((JProgressBar)downloadsModel.getValueAt(i, 3)).setValue(transfer.getProgress());
+				break;
+			}
+		}
 	}
 }
