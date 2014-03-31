@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /*
  * 
  */
@@ -12,7 +14,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		Mediator mediator = new Mediator();
-		mediator.addPeer(MY_PEER_NAME);
+		mediator.addPeer(MY_PEER_NAME, new ArrayList<File>());
 		
 		GUI gui = new GUI(mediator);
 		mediator.setGUI(gui);

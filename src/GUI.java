@@ -117,11 +117,10 @@ public class GUI extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println(peersList.getSelectedIndex());
 				filesModel.clear();
-				String value = (String)peersList.getSelectedValue();
-				filesModel.addElement(value+" first file");
-				filesModel.addElement(value+" second file");
+				String peerName = (String)peersList.getSelectedValue();
+				filesModel.addElement(peerName+" first file");
+				filesModel.addElement(peerName+" second file");
 			}
 
 			@Override
