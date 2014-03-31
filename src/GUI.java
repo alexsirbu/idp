@@ -177,7 +177,7 @@ public class GUI extends JPanel {
 						Peer myself = mediator.getPeerByName(Main.MY_PEER_NAME);
 						File file = peer.getSharedFileByName(fileName);
 						
-						mediator.addOutgoingTransfer(new Transfer(file, peer, myself));
+						mediator.addTransferRequest(new Transfer(file, peer, myself));
 						
 						Object[] rowData =
 							{
