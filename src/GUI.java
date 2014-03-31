@@ -257,5 +257,12 @@ public class GUI extends JPanel {
 	public void deletePeer(Peer peer) {
 		if (((String)(peersList.getSelectedValue())).equals(peer.getName()))
 			filesModel.clear();		
+		
+		for(int i=0; i<peersModel.getSize(); i++)
+			if (((String)(peersModel.getElementAt(i))).equals(peer.getName()))
+			{
+				peersModel.remove(i);
+				break;
+			}
 	}
 }
