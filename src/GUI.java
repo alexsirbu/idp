@@ -1,5 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -94,6 +96,10 @@ public class GUI extends JPanel {
 		filesList = new JList(filesModel);
 		downloadsTable = new JTable(downloadsModel);
 		
+		TableColumnModel tableColumnModel = downloadsTable.getColumnModel();
+		TableColumn progressBarColumn = tableColumnModel.getColumn(3);
+		progressBarColumn.setCellRenderer(new CustomCellRenderer());
+		
 		peersModel.addElement("first peer");
 		peersModel.addElement("second peer");
 	
@@ -163,7 +169,7 @@ public class GUI extends JPanel {
 								peerName,
 								"__MYSELF__",
 								fileName,
-								"none",
+								new JProgressBar(0, 10),
 								"Receiving"
 							};
 						downloadsModel.addRow(rowData);
