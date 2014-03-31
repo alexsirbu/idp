@@ -56,21 +56,20 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void updateTransfer(String fileName, int chunckSize) {
+	public void updateTransfer(String senderName, String fileName, int chunckSize) {
 		Transfer transfer = null;
 		
 		for(int i = 0; i < transfers.size(); i++) {
-			if(transfers.get(i).getFile().getName().equals(fileName))
+			if(transfers.get(i).getFile().getName().equals(fileName)
+					&& transfers.get(i).getSender().getName().equals(senderName))
 				transfer = transfers.get(i);
 		}
 		
 		if(transfer == null)
 			return;
 		
-		int fileSize = transfer.getFile().getSize();
-		int chunckSizeAsPercentage = chunckSize / fileSize * 100;
-		
-		
+		transfer.updateProgress(chunckSize);
+		gui.updateTransferProgress(transfer);
 	}
 	
 	/*

@@ -61,8 +61,7 @@ public class Transfer {
 	/*
 	 * 
 	 */
-	public void setProgress(int progress) {
-		assert progress >= 0 && progress <= 100;
-		this.progress = progress;
+	public void updateProgress(int chunckSize) {
+		progress += chunckSize / file.getSize() * 100;
 	}
 }
