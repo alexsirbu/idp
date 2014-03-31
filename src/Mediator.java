@@ -18,6 +18,12 @@ public class Mediator {
 	 */
 	private ArrayList<Transfer> transfers;
 	
+	
+	public Mediator()
+	{
+		peers = new ArrayList<Peer>();
+		transfers = new ArrayList<Transfer>();
+	}
 	/*
 	 * 
 	 */
