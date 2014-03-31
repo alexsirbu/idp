@@ -107,8 +107,8 @@ public class GUI extends JPanel {
 		TableColumn progressBarColumn = tableColumnModel.getColumn(3);
 		progressBarColumn.setCellRenderer(new CustomCellRenderer());
 		
-		peersModel.addElement("first peer");
-		peersModel.addElement("second peer");
+		//peersModel.addElement("first peer");
+		//peersModel.addElement("second peer");
 	
 		top.add(new JScrollPane(peersList));
 		top.add(new JScrollPane(filesList));
@@ -228,7 +228,7 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	public void updateProgress() {
+	public void updateProgress(Transfer transfer) {
 		
 	}
 }
