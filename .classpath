@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/uispec4j-2.4-jdk16.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/xael/Desktop/idp stuff/idp/lib/junit-4.11.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
