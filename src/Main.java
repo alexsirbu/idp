@@ -4,19 +4,25 @@ import java.awt.event.*;
 
 public class Main extends JPanel {
 	
-	private DefaultListModel	model;										// list model
+	private DefaultListModel	clients;										// list model
 	private JList				list, mirror;								// lists
-	private JTextField			tName			= new JTextField(10);		// name field
-	private JButton				bAdd			= new JButton("Add");		// add button
-	private JButton				bRemove			= new JButton("Remove");	// remove button
-	private JButton				bUndo			= new JButton("Undo");		// add button
-	private JButton				bRedo			= new JButton("Redo");	// remove button
 	
 	public Main() {
 		init();
 	}
 	
 	public void init() {
+		
+		JPanel top = new JPanel(new GridLayout(1, 0));
+		JPanel bottom = new JPanel(new FlowLayout());
+		this.setLayout(new BorderLayout());
+		this.add(top, BorderLayout.CENTER);
+		this.add(bottom, BorderLayout.SOUTH);
+		top.add(new JScrollPane());
+		top.add(new JScrollPane());
+		
+		
+		/*
 		// initialize model
 		model = new DefaultListModel();
 		
@@ -105,15 +111,16 @@ public class Main extends JPanel {
 		});
 		
 		// TODO 4: add listener for Remove button
+		*/
 	}
 	
 	public static void buildGUI() {
-		JFrame frame = new JFrame("Swing stuff"); // title
-		frame.setContentPane(new Main()); // content: the JPanel above
-		frame.setSize(500, 300); // width / height
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit application when window is closed
+		JFrame frame = new JFrame("IDP File Sharing");
+		frame.setContentPane(new Main());
+		frame.setSize(800, 640);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true); // show it!
+		frame.setVisible(true);
 	}
 
 
