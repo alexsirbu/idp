@@ -242,6 +242,20 @@ public class GUI extends JPanel {
 				break;
 			}
 		}
-		
+	}
+	
+	/*
+	 * 
+	 */
+	public void addPeer(Peer peer) {
+		peersModel.addElement(peer.getName());
+	}
+	
+	/*
+	 * 
+	 */
+	public void deletePeer(Peer peer) {
+		if (((String)(peersList.getSelectedValue())).equals(peer.getName()))
+			filesModel.clear();		
 	}
 }
