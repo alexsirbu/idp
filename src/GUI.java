@@ -27,6 +27,10 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
+	private Mediator mediator;
+	/*
+	 * 
+	 */
 	private DefaultListModel	peersModel;
 	/*
 	 * 
@@ -52,7 +56,9 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	public GUI() {
+	public GUI(Mediator mediator) {
+		this.mediator = mediator;
+		
 		final GUI gui = this;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -192,8 +198,7 @@ public class GUI extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-			}
-			
+			}			
 		});
 	}
 	
