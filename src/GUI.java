@@ -5,6 +5,7 @@ import javax.swing.table.TableColumnModel;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  * @author cristian
@@ -119,8 +120,10 @@ public class GUI extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				filesModel.clear();
 				String peerName = (String)peersList.getSelectedValue();
-				filesModel.addElement(peerName+" first file");
-				filesModel.addElement(peerName+" second file");
+				
+				Peer peer = mediator.getPeerByName(peerName);
+				for(int j=0; j<peer.getSharedFiles().size(); j++)
+					filesModel.addElement(peer.getSharedFiles().get(j));
 			}
 
 			@Override
@@ -167,8 +170,17 @@ public class GUI extends JPanel {
 							break;
 						}
 					}
+					
 					if (!alreadyDownloading)
 					{
+						ArrayList<Transfer> transfers = mediator.getTransfers();
+						
+						Peer peer = mediator.getPeerByName(peerName);
+						Peer myself = mediator.getPeerByName(Main.MY_PEER_NAME);
+						File file = peer.getSharedFileByName(fileName);
+						
+						transfers.add(new Transfer(file, peer, myself));
+						
 						Object[] rowData =
 							{
 								peerName,

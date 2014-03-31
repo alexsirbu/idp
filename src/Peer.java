@@ -46,6 +46,20 @@ public class Peer {
 	/*
 	 * 
 	 */
+	public File getSharedFileByName(String fileName) {
+		for(int i=0; i<sharedFiles.size(); i++)
+			if (sharedFiles.get(i).getName().equals(fileName))
+			{
+				return sharedFiles.get(i);
+			}
+	
+		assert(false);
+		return null;
+	}
+	
+	/*
+	 * 
+	 */
 	public void setSharedFiles(ArrayList<File> sharedFiles) {
 		this.sharedFiles = sharedFiles;
 	}

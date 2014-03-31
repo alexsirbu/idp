@@ -42,6 +42,17 @@ public class Mediator {
 		return transfers;
 	}
 	
+	public Peer getPeerByName(String peerName) {
+		for(int i=0; i<peers.size(); i++)
+			if (peers.get(i).getName().equals(peerName))
+			{
+				return peers.get(i);
+			}
+	
+		assert(false);
+		return null;
+	}
+	
 	/*
 	 * 
 	 */

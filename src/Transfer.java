@@ -10,7 +10,11 @@ public class Transfer {
 	/*
 	 * 
 	 */
-	private Peer peer;
+	private Peer sender;
+	/*
+	 * 
+	 */
+	private Peer receiver;
 	/*
 	 * 
 	 */
@@ -19,9 +23,10 @@ public class Transfer {
 	/*
 	 * 
 	 */
-	public Transfer(File file, Peer peer) {
+	public Transfer(File file, Peer sender, Peer receiver) {
 		this.file = file;
-		this.peer = peer;
+		this.sender = sender;
+		this.receiver = receiver;
 		this.progress = 0;
 	}
 	
@@ -35,8 +40,15 @@ public class Transfer {
 	/*
 	 * 
 	 */
-	public Peer getPeer() {
-		return peer;
+	public Peer getSender() {
+		return sender;
+	}
+	
+	/*
+	 * 
+	 */
+	public Peer getReceiver() {
+		return receiver;
 	}
 
 	/*

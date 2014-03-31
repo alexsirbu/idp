@@ -7,7 +7,7 @@ public class Main {
 	/*
 	 * 
 	 */
-	private static String MY_PEER_NAME = "__MYSELF__";
+	protected static String MY_PEER_NAME = "__MYSELF__";
 	
 	/*
 	 * 
