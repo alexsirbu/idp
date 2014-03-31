@@ -19,11 +19,15 @@ public class Mediator {
 	private ArrayList<Transfer> transfers;
 	
 	
+	/*
+	 * 
+	 */
 	public Mediator()
 	{
 		peers = new ArrayList<Peer>();
 		transfers = new ArrayList<Transfer>();
 	}
+	
 	/*
 	 * 
 	 */
@@ -34,39 +38,12 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public ArrayList<Peer> getPeers() {
-		return peers;
-	}
-	
-	public ArrayList<Transfer> getTransfers() {
-		return transfers;
-	}
-	
 	public Peer getPeerByName(String peerName) {
 		for(int i=0; i<peers.size(); i++)
 			if (peers.get(i).getName().equals(peerName))
 				return peers.get(i);
 	
 		return null;
-	}
-	
-	/*
-	 * 
-	 */
-	public void updateTransfer(String senderName, String fileName, int chunckSize) {
-		Transfer transfer = null;
-		
-		for(int i = 0; i < transfers.size(); i++) {
-			if(transfers.get(i).getFile().getName().equals(fileName)
-					&& transfers.get(i).getSender().getName().equals(senderName))
-				transfer = transfers.get(i);
-		}
-		
-		if(transfer == null)
-			return;
-		
-		transfer.updateProgress(chunckSize);
-		gui.updateTransferProgress(transfer);
 	}
 	
 	/*
@@ -99,5 +76,51 @@ public class Mediator {
 			return;
 		
 		peer.setSharedFiles(sharedFiles);
+	}
+	
+	/*
+	 * 
+	 */
+	public void addTransferRequest(Transfer transfer) {
+		transfers.add(transfer);
+	}
+	
+	/*
+	 * 
+	 */
+	public void addTransferIncomingRequest(String requesterName, String fileName) {
+		Peer requesterPeer = getPeerByName(requesterName);
+		if(requesterPeer == null)
+			return;
+		
+		Peer myPeer = getPeerByName(Main.MY_PEER_NAME);
+		assert myPeer != null;
+		
+		File file = myPeer.getSharedFileByName(fileName);
+		if(file == null)
+			return;
+		
+		Transfer transfer = new Transfer(file, myPeer, requesterPeer);
+		transfers.add(transfer);
+		gui.addIncomingTransfer(transfer);
+	}
+	
+	/*
+	 * 
+	 */
+	public void updateTransferProgress(String senderName, String fileName, int chunckSize) {
+		Transfer transfer = null;
+		
+		for(int i = 0; i < transfers.size(); i++) {
+			if(transfers.get(i).getFile().getName().equals(fileName)
+					&& transfers.get(i).getSender().getName().equals(senderName))
+				transfer = transfers.get(i);
+		}
+		
+		if(transfer == null)
+			return;
+		
+		transfer.updateProgress(chunckSize);
+		gui.updateTransferProgress(transfer);
 	}
 }
