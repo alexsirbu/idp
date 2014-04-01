@@ -21,5 +21,8 @@ public class Main {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File(new String("aha"), 15));
 		mediator.addLocalPeer(LOCAL_PEER_NAME, files);
+		
+		GUITest guiTest = new GUITest(mediator);
+		guiTest.run();
 	}
 }

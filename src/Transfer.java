@@ -61,7 +61,8 @@ public class Transfer {
 	/*
 	 * 
 	 */
-	public void updateProgress(int chunckSize) {
-		progress += chunckSize / file.getSize() * 100;
+	public void updateProgress(int chunkSize) {
+		progress += (chunkSize * 100) / file.getSize();
+		progress = Math.min(progress, 100);
 	}
 }

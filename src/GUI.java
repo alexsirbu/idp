@@ -186,7 +186,7 @@ public class GUI extends JPanel {
 							peerName,
 							myself.getName(),
 							fileName,
-							new JProgressBar(0, 10),
+							new JProgressBar(0, 100),
 							"Receiving"
 						});
 						
@@ -242,7 +242,8 @@ public class GUI extends JPanel {
 	 * 
 	 */
 	public void deletePeer(Peer peer) {
-		if(((String)(peersList.getSelectedValue())).equals(peer.getName()))
+		if(peersList.getSelectedValue() != null
+			&& ((String)(peersList.getSelectedValue())).equals(peer.getName()))
 			filesModel.clear();		
 		
 		for(int i = 0; i < peersModel.getSize(); i++)
@@ -259,7 +260,9 @@ public class GUI extends JPanel {
 	 * 
 	 */
 	public void updatePeerFiles(Peer peer) {
-		if(((String)(peersList.getSelectedValue())).equals(peer.getName()))
+		
+		if(peersList.getSelectedValue() != null
+				&& ((String)(peersList.getSelectedValue())).equals(peer.getName()))
 		{
 			filesModel.clear();
 			
@@ -276,7 +279,7 @@ public class GUI extends JPanel {
 			transfer.getSendingPeer().getName(),
 			transfer.getReceivingPeer().getName(),
 			transfer.getFile().getName(),
-			new JProgressBar(0, 10),
+			new JProgressBar(0, 100),
 			"Sending"
 		});
 	}
@@ -290,11 +293,13 @@ public class GUI extends JPanel {
 		for(int i = 0; i < rows; i++)
 		{
 			String currentSenderName = (String)(transfersModel.getValueAt(i, 0));
+			String currentReceiverName = (String)(transfersModel.getValueAt(i, 1));
 			String currentFileName = (String)(transfersModel.getValueAt(i, 2));
 			
 			if(currentSenderName.equals(transfer.getSendingPeer().getName())
+					&& currentReceiverName.equals(transfer.getReceivingPeer().getName())
 					&& currentFileName.equals(transfer.getFile().getName()))
-			{
+			{	
 				((JProgressBar)transfersModel.getValueAt(i, 3)).setValue(transfer.getProgress());
 				if (transfer.getProgress() == 100)
 					transfersModel.setValueAt("Completed", i, 4);

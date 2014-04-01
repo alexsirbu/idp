@@ -83,8 +83,8 @@ public class Mediator {
 		if(peer == null)
 			return;
 		
-		peers.remove(peer);
 		gui.deletePeer(peer);
+		peers.remove(peer);
 	}
 	
 	/*
@@ -96,6 +96,7 @@ public class Mediator {
 			return;
 		
 		peer.setSharedFiles(sharedFiles);
+		gui.updatePeerFiles(peer);
 	}
 	
 	/*
@@ -125,12 +126,13 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void updateTransferProgress(String sendingPeerName, String fileName, int chunkSize) {
+	public void updateTransferProgress(String sendingPeerName, String recevingPeerName, String fileName, int chunkSize) {
 		Transfer transfer = null;
 		
 		for(int i = 0; i < transfers.size(); i++) {
 			if(transfers.get(i).getFile().getName().equals(fileName)
-					&& transfers.get(i).getSendingPeer().getName().equals(sendingPeerName))
+					&& transfers.get(i).getSendingPeer().getName().equals(sendingPeerName)
+					&& transfers.get(i).getReceivingPeer().getName().equals(recevingPeerName))
 				transfer = transfers.get(i);
 		}
 		
