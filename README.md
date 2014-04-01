@@ -23,6 +23,10 @@ implementa in decursul semestrului. Pentru realizarea acestuia, noi am decis sa
 realizam si un draft al modulului de mediator, pentru a ne ajuta si la testare
 acum, si pe viitor la realizarea si integrarea celorlalte module.
 
+Pentru rularea proiectului, trebuie executat doar ant in directorul principal.
+Pentru simplitate, am inclus rularea mock-ului in rularea main-ului si nu necesita
+o rulare suplimentara.
+
 Pentru implementarea acestei teme, am considerat necesare clase pentru File,
 in care momentan retinem numele fisierului si size-ul, Peer, in care retinem 
 numele utilizatorului si lista sa de fisiere, si Transfer, in care retinem 
@@ -30,7 +34,9 @@ informatii despre un transfer (sender, receiver, fisier si status sub forma
 procentului deja transferat din fisier). Aceste clase le-am folosit pentru a 
 retine date despre entitatile din program si am retinut liste de Peers si 
 Transferuri la nivelul mediatorului, pentru a avea separarea nivelului grafic
-de nivelul de management al datelor.
+de nivelul de management al datelor. Astfel, am folosit modelul MVC, modelul
+fiind reprezentat de aceste clase, controller-ul fiind mediatorul si view-ul fiind
+modulul grafic.
 
 In cadrul modulului grafic, am extins, in primul rand, TableCellRenderer, pentru
 a face afisarea progress bar-ului in cadrul tabelului, precum si DefaultTableModel,
