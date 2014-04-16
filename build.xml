@@ -12,6 +12,7 @@
     <property name="source" value="1.7"/>
     <path id="idp.classpath">
         <pathelement location="bin"/>
+        <pathelement location="lib/log4j-1.2.17.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -23,7 +24,9 @@
         </copy>
     </target>
     <target name="clean">
-        <delete dir="bin"/>
+    	<delete>
+        <fileset dir="bin" includes="**/*.class"/>
+       </delete>
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="build-subprojects,build-project" name="build"/>
@@ -36,8 +39,25 @@
         </javac>
     </target>
     <target name="run" depends="build-project">
-        <java classname="Main" failonerror="true" fork="yes">
-            <classpath refid="idp.classpath"/>
-        </java>
+    		<parallel>
+    			<java classname="Main" failonerror="true" fork="yes">
+		          <classpath refid="idp.classpath"/>
+		          <arg value="client1"/>
+		      </java>
+		  		<sequential>	
+				    <sleep seconds="2"/>
+				    <java classname="Main" failonerror="true" fork="yes">
+				        <classpath refid="idp.classpath"/>
+				        <arg value="client2"/>
+				    </java>
+				  </sequential>
+				  <sequential>
+				    <sleep seconds="4"/>
+				    <java classname="Main" failonerror="true" fork="yes">
+				        <classpath refid="idp.classpath"/>
+				        <arg value="client3"/>
+		      	</java>
+		      </sequential>
+        </parallel>
     </target>
 </project>

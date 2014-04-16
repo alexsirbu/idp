@@ -12,7 +12,15 @@ public class Peer {
 	 * 
 	 */
 	private ArrayList<File> sharedFiles;
+	/*
+	 * 
+	 */
+	private String IP;
 	
+	/*
+	 * 
+	 */
+	private String port;
 	
 	/*
 	 * 
@@ -26,6 +34,17 @@ public class Peer {
 	 */
 	public Peer(String name, ArrayList<File> sharedFiles) {
 		this.name = name;
+		this.sharedFiles = sharedFiles;
+	}
+	
+	/*
+	 * 
+	 */
+	public Peer(String name, String IP, String port, ArrayList<File> sharedFiles)
+	{
+		this.name=name;
+		this.IP=IP;
+		this.port=port;
 		this.sharedFiles = sharedFiles;
 	}
 	
