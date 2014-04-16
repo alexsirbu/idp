@@ -39,8 +39,25 @@
         </javac>
     </target>
     <target name="run" depends="build-project">
-        <java classname="Main" failonerror="true" fork="yes">
-            <classpath refid="idp.classpath"/>
-        </java>
+    		<parallel>
+    			<java classname="Main" failonerror="true" fork="yes">
+		          <classpath refid="idp.classpath"/>
+		          <arg value="client1"/>
+		      </java>
+		  		<sequential>	
+				    <sleep seconds="2"/>
+				    <java classname="Main" failonerror="true" fork="yes">
+				        <classpath refid="idp.classpath"/>
+				        <arg value="client2"/>
+				    </java>
+				  </sequential>
+				  <sequential>
+				    <sleep seconds="4"/>
+				    <java classname="Main" failonerror="true" fork="yes">
+				        <classpath refid="idp.classpath"/>
+				        <arg value="client3"/>
+		      	</java>
+		      </sequential>
+        </parallel>
     </target>
 </project>
