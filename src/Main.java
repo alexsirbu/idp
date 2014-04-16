@@ -27,8 +27,6 @@ public class Main {
 	    appender.setLayout(new PatternLayout("%d %-5p [%c{1}] %m%n"));
 	    appender.activateOptions();
 		logger.addAppender(appender);
-		logger.debug("MARIETA");
-		logger.error("PLM");
 		
 		Mediator mediator = new Mediator(args[0]);
 		
