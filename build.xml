@@ -23,7 +23,9 @@
         </copy>
     </target>
     <target name="clean">
-        <delete dir="bin"/>
+    	<delete>
+        <fileset dir="bin" includes="**/*.class"/>
+       </delete>
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="build-subprojects,build-project" name="build"/>

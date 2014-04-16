@@ -14,15 +14,17 @@ public class Main {
 	 * 
 	 */
 	public static void main(String[] args) throws Exception {
-		Mediator mediator = new Mediator(LOCAL_PEER_NAME);
+		if (args.length < 1)
+			throw new Exception("Not enough parameters given.\nParameters required: user_name");
+			
+		Mediator mediator = new Mediator(args[0]);
 		
 		GUI gui = new GUI(mediator);
 		mediator.setGUI(gui);
-		ArrayList<File> files = new ArrayList<File>();
-		files.add(new File(new String("aha"), 15));
-		mediator.addLocalPeer(LOCAL_PEER_NAME, files);
 		
-		GUITest guiTest = new GUITest(mediator);
-		guiTest.run();
+		mediator.registerLocalPeer();
+		
+		//GUITest guiTest = new GUITest(mediator);
+		//guiTest.run();
 	}
 }

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 /*
@@ -20,7 +21,25 @@ public class Mediator {
 	 * 
 	 */
 	private Peer localPeer;
+	/*
+	 * 
+	 */
+	private String localPeerRealName;
 	
+	/*
+	 * 
+	 */
+	private String localPeerIP;
+	
+	/*
+	 * 
+	 */
+	private String localPeerPort;
+	
+	/*
+	 * Temporary, for stage 2 only;
+	 */
+	private String usersFolder;
 	
 	/*
 	 * 
@@ -28,6 +47,80 @@ public class Mediator {
 	public Mediator(String localPeerName) {
 		peers = new ArrayList<Peer>();
 		transfers = new ArrayList<Transfer>();
+		localPeerRealName = localPeerName;
+	}
+	
+	/*
+	 * 
+	 */
+	public void registerLocalPeer() throws IOException{
+		
+		FileOperations fo = new FileOperationsJavaNIO(localPeerRealName+".txt");
+		
+		String configFile = new String(fo.readAll());
+		
+		String[] configs = configFile.split("\n");
+		
+		for (int i=0; i<configs.length; i++)
+		{
+			String[] configMembers = configs[i].split(": ");
+			if (configMembers[0].equals("user-ip"))
+				this.localPeerIP=configMembers[1];
+			else if (configMembers[0].equals("user-port"))
+				this.localPeerPort=configMembers[1];
+			else if (configMembers[0].equals("users-folder"))
+				this.usersFolder=configMembers[1];
+		}
+		
+		ArrayList<File> files = new ArrayList<File>();
+		java.io.File folder = new java.io.File(localPeerRealName);
+		for(java.io.File file : folder.listFiles())
+			files.add(new File(file.getName(), (int)file.length()));
+			
+		addLocalPeer(Main.LOCAL_PEER_NAME, files);
+		
+		// TODO Stage 3: here or in addLocalPeer, send info to server with my files
+		getPeers();
+		
+	}
+	
+	/*
+	 * this will change in stage 3
+	 */
+	public void getPeers() throws IOException
+	{
+		String IP="";
+		String port="";
+		String name="";
+		ArrayList<File> files;
+		
+		java.io.File folder = new java.io.File(usersFolder);
+		for(java.io.File file : folder.listFiles())
+			if (!file.getName().equals(localPeerRealName+".txt"))
+			{
+				files = new ArrayList<File>();
+				name = file.getName().replaceAll(".txt","");
+				
+				FileOperations fo = new FileOperationsJavaNIO(usersFolder+"/"+file.getName());
+				
+				String configFile = new String(fo.readAll());
+				
+				String[] configs = configFile.split("\n");
+				
+				for (int i=0; i<configs.length; i++)
+				{
+					String[] configMembers = configs[i].split(": ");
+					if (configMembers[0].equals("user-ip"))
+						IP=configMembers[1];
+					else if (configMembers[0].equals("user-port"))
+						port=configMembers[1];
+					else if (configMembers[0].equals("user-file"))
+						files.add(new File(configMembers[1], (int)new java.io.File(name+"/"+configMembers[1]).length()));
+
+				}
+				
+				addPeer(name, IP, port, files);
+			}
 	}
 	
 	/*
@@ -60,6 +153,16 @@ public class Mediator {
 	 */
 	public void addPeer(String peerName, ArrayList<File> sharedFiles) {
 		Peer peer = new Peer(peerName, sharedFiles);
+		
+		peers.add(peer);
+		gui.addPeer(peer);
+	}
+	
+	/*
+	 * 
+	 */
+	public void addPeer(String peerName, String IP, String port, ArrayList<File> sharedFiles) {
+		Peer peer = new Peer(peerName, IP, port, sharedFiles);
 		
 		peers.add(peer);
 		gui.addPeer(peer);
