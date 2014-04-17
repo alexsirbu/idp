@@ -3,10 +3,12 @@ import java.nio.ByteBuffer;
 public class MessageRequestFile extends Message{
 	
 	String filename;
+	String requester;
 	
-	public MessageRequestFile(String filename)
+	public MessageRequestFile(String filename, String requester)
 	{
 		this.filename=filename;
+		this.requester=requester;
 	}
 	
 	public MessageRequestFile(byte[] encodedMessage)
@@ -15,6 +17,7 @@ public class MessageRequestFile extends Message{
 		
 		int type;
 		int filenameSize;
+		int requesterSize;
 		
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
 		
@@ -27,6 +30,14 @@ public class MessageRequestFile extends Message{
 			bytes[i]=buffer.get();
 		
 		filename=new String(bytes);
+		
+		requesterSize = buffer.getInt();
+		bytes = new byte[requesterSize];
+		
+		for (int i=0; i<requesterSize; i++)
+			bytes[i]=buffer.get();
+		
+		requester = new String(bytes);
 	}
 	
 	public byte[] encode()
@@ -36,6 +47,8 @@ public class MessageRequestFile extends Message{
 		buffer.putInt(Message.REQUEST_FILE_TYPE);
 		buffer.putInt(filename.length());
 		buffer.put(filename.getBytes());
+		buffer.putInt(requester.length());
+		buffer.put(requester.getBytes());
 		
 		return buffer.array();
 	}
@@ -48,5 +61,10 @@ public class MessageRequestFile extends Message{
 	public String getFilename()
 	{
 		return filename;
+	}
+	
+	public String getRequester()
+	{
+		return requester;
 	}
 }

@@ -5,12 +5,14 @@ public class MessageRequestFilePart extends Message {
 	String filename;
 	int position;
 	int length;
+	String requester;
 	
-	public MessageRequestFilePart(String filename, int position, int length)
+	public MessageRequestFilePart(String filename, int position, int length, String requester)
 	{
 		this.filename = filename;
 		this.position = position;
 		this.length = length;
+		this.requester = requester;
 	}
 	
 	public MessageRequestFilePart(byte[] encodedMessage)
@@ -19,6 +21,7 @@ public class MessageRequestFilePart extends Message {
 		
 		int type;
 		int filenameSize;
+		int requesterSize;
 		
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
 		
@@ -33,6 +36,13 @@ public class MessageRequestFilePart extends Message {
 		filename=new String(bytes);
 		position=buffer.getInt();
 		length=buffer.getInt();
+		
+		requesterSize = buffer.getInt();
+		bytes=new byte[requesterSize];
+		for(int i=0; i<requesterSize; i++)
+			bytes[i]=buffer.get();
+		
+		requester = new String(bytes);
 	}
 	
 	public byte[] encode()
@@ -44,6 +54,8 @@ public class MessageRequestFilePart extends Message {
 		buffer.put(filename.getBytes());
 		buffer.putInt(position);
 		buffer.putInt(length);
+		buffer.putInt(requester.length());
+		buffer.put(requester.getBytes());
 		
 		return buffer.array();
 	}
@@ -66,6 +78,11 @@ public class MessageRequestFilePart extends Message {
 	public int getLength()
 	{
 		return length;
+	}
+	
+	public String getRequester()
+	{
+		return requester;
 	}
 	
 }
