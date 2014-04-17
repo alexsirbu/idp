@@ -4,6 +4,26 @@ public class MessageRequestFile extends Message{
 	
 	String filename;
 	
+	public MessageRequestFile(byte[] encodedMessage)
+	{
+		super(encodedMessage);
+		
+		int type;
+		int filenameSize;
+		
+		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
+		
+		type = buffer.getInt();
+		filenameSize = buffer.getInt();
+		
+		byte[] bytes= new byte[filenameSize];
+		
+		for (int i=0; i<filenameSize; i++)
+			bytes[i]=buffer.get();
+		
+		filename=new String(bytes);
+	}
+	
 	public byte[] encode()
 	{
 		ByteBuffer buffer = ByteBuffer.allocate(2000);

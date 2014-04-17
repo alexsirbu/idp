@@ -7,6 +7,33 @@ public class MessageRequestFilePartResponse extends Message {
 	int length;
 	byte[] content;
 	
+	public MessageRequestFilePartResponse(byte[] encodedMessage)
+	{
+		super(encodedMessage);
+		
+		int type;
+		int filenameSize;
+		
+		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
+		
+		type = buffer.getInt();
+		filenameSize = buffer.getInt();
+		
+		byte[] bytes= new byte[filenameSize];
+		
+		for (int i=0; i<filenameSize; i++)
+			bytes[i]=buffer.get();
+		
+		filename=new String(bytes);
+		position=buffer.getInt();
+		length=buffer.getInt();
+		
+		content = new byte[length];
+		
+		for (int i=0; i<length; i++)
+			content[i]=buffer.get(i);
+	}
+	
 	public byte[] encode()
 	{
 		ByteBuffer buffer = ByteBuffer.allocate(2000);
