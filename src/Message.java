@@ -9,5 +9,6 @@ public abstract class Message {
 	public Message(byte[] encodedMessage){};
 	
 	public abstract byte[] encode(); 
+	public abstract int getType();
 	
 }

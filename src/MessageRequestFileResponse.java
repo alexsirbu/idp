@@ -43,4 +43,9 @@ public class MessageRequestFileResponse extends Message {
 		return buffer.array();
 	}
 	
+	public int getType()
+	{
+		return Message.REQUEST_FILE_RESPONSE_TYPE;
+	}
+	
 }

@@ -48,4 +48,9 @@ public class MessageRequestFilePart extends Message {
 		return buffer.array();
 	}
 	
+	public int getType()
+	{
+		return Message.REQUEST_FILE_TYPE;
+	}
+	
 }
