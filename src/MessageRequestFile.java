@@ -1,0 +1,18 @@
+import java.nio.ByteBuffer;
+
+public class MessageRequestFile extends Message{
+	
+	String filename;
+	
+	public byte[] encode()
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(2000);
+		
+		buffer.putInt(Message.REQUEST_FILE_TYPE);
+		buffer.putInt(filename.length());
+		buffer.put(filename.getBytes());
+		
+		return buffer.array();
+	}
+	
+}
