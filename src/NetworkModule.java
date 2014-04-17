@@ -24,13 +24,27 @@ public class NetworkModule extends Thread implements Observable, Observer
 	private ExecutorService executorsPool;
 	
 	
+	public NetworkModule() throws IOException
+	{
+		this.socketChannels = new ArrayList<SocketChannel>();
+		this.observers = new ArrayList<Observer>();
+		this.executorsPool = Executors.newFixedThreadPool(NetworkModule.POOL_SIZE);
+	}
+	
 	public NetworkModule(String ip, int port) throws IOException
 	{
 		this.ip = ip;
 		this.port = port;
-		this.socketChannels = new ArrayList<SocketChannel>();
-		this.observers = new ArrayList<Observer>();
-		this.executorsPool = Executors.newFixedThreadPool(NetworkModule.POOL_SIZE);
+	}
+	
+	public void setIp(String ip)
+	{
+		this.ip = ip;
+	}
+	
+	public void setPort(int port)
+	{
+		this.port = port;
 	}
 	
 	@Override

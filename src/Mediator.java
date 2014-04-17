@@ -12,6 +12,10 @@ public class Mediator {
 	/*
 	 * 
 	 */
+	private NetworkModuleAdapter net;
+	/*
+	 * 
+	 */
 	private ArrayList<Peer> peers;
 	/*
 	 * 
@@ -128,6 +132,14 @@ public class Mediator {
 	 */
 	public void setGUI(GUI gui) {
 		this.gui = gui;
+	}
+	
+	/*
+	 * 
+	 */
+	public void setNet(NetworkModuleAdapter net)
+	{
+		this.net = net;
 	}
 	
 	/*

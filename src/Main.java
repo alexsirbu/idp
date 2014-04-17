@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import org.apache.log4j.*;
 
 /*
@@ -35,7 +34,11 @@ public class Main {
 		
 		mediator.registerLocalPeer();
 		
-		//GUITest guiTest = new GUITest(mediator);
-		//guiTest.run();
+		NetworkModule netModule = new NetworkModule();
+		NetworkModuleAdapter net = new NetworkModuleAdapter(netModule, mediator);
+		mediator.setNet(net);
+		netModule.start();
+		
+		netModule.join();
 	}
 }
