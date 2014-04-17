@@ -44,7 +44,6 @@ public class NetworkModuleReadState extends NetworkModuleOperationState
 		if((observer instanceof NetworkModule))
 			this.processNetworkModule((NetworkModule)observer);
 		else
-		{
-		}
+			((NetworkModuleAdapter)observer).processNetworkModuleRead(this);
 	}
 }

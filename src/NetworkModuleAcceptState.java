@@ -34,7 +34,6 @@ public class NetworkModuleAcceptState extends NetworkModuleOperationState
 		if((observer instanceof NetworkModule))
 			this.processNetworkModule((NetworkModule)observer);
 		else
-		{	
-		}
+			((NetworkModuleAdapter)observer).processNetworkModuleAccept(this);
 	}
 }

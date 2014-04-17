@@ -233,6 +233,7 @@ public class Mediator {
 	 */
 	public void addTransferOutgoingRequest(Transfer transfer) {
 		transfers.add(transfer);
+		this.net.initOutgoingTransferRequest(transfer);
 	}
 	
 	/*

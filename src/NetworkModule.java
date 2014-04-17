@@ -149,8 +149,6 @@ public class NetworkModule extends Thread implements Observable, Observer
 	
 	public void disconnect(SocketChannel socketChannel) throws IOException
 	{
-		assert this.socketChannels.contains(socketChannel);
-		
 		InetSocketAddress addr = (InetSocketAddress)socketChannel.socket().getRemoteSocketAddress();
 		NetworkModule.logger.info("NetworkModule: Disconnecting from " + addr.getHostString() + ":" + addr.getPort() + ".");
 		
@@ -162,8 +160,6 @@ public class NetworkModule extends Thread implements Observable, Observer
 	
 	public void read(SocketChannel socketChannel)
 	{
-		assert this.socketChannels.contains(socketChannel);
-		
 		InetSocketAddress addr = (InetSocketAddress)socketChannel.socket().getRemoteSocketAddress();
 		NetworkModule.logger.info("NetworkModule: Reading from " + addr.getHostString() + ":" + addr.getPort() + ".");
 		
@@ -178,8 +174,6 @@ public class NetworkModule extends Thread implements Observable, Observer
 	
 	public void write(SocketChannel socketChannel, byte[] src)
 	{
-		assert this.socketChannels.contains(socketChannel);
-		
 		InetSocketAddress addr = (InetSocketAddress)socketChannel.socket().getRemoteSocketAddress();
 		NetworkModule.logger.info("NetworkModule: Writing to " + addr.getHostString() + ":" + addr.getPort() + ".");
 		

@@ -26,8 +26,6 @@ public class NetworkModuleWriteState extends NetworkModuleOperationState
 		if((observer instanceof NetworkModule))
 			this.processNetworkModule((NetworkModule)observer);
 		else
-		{
-		
-		}
+			((NetworkModuleAdapter)observer).processNetworkModuleWrite(this);
 	}
 }

@@ -34,7 +34,6 @@ public class NetworkModuleConnectState extends NetworkModuleOperationState
 		if((observer instanceof NetworkModule))
 			this.processNetworkModule((NetworkModule)observer);
 		else
-		{
-		}
+			((NetworkModuleAdapter)observer).processNetworkModuleConnect(this);
 	}
 }
