@@ -34,7 +34,7 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	private String localPeerPort;
+	private int localPeerPort;
 	
 	/*
 	 * Temporary, for stage 2 only;
@@ -67,7 +67,7 @@ public class Mediator {
 			if (configMembers[0].equals("user-ip"))
 				this.localPeerIP=configMembers[1];
 			else if (configMembers[0].equals("user-port"))
-				this.localPeerPort=configMembers[1];
+				this.localPeerPort=Integer.parseInt(configMembers[1]);
 			else if (configMembers[0].equals("users-folder"))
 				this.usersFolder=configMembers[1];
 		}
@@ -90,7 +90,7 @@ public class Mediator {
 	public void getPeers() throws IOException
 	{
 		String IP="";
-		String port="";
+		int port=0;
 		String name="";
 		ArrayList<File> files;
 		
@@ -113,7 +113,7 @@ public class Mediator {
 					if (configMembers[0].equals("user-ip"))
 						IP=configMembers[1];
 					else if (configMembers[0].equals("user-port"))
-						port=configMembers[1];
+						port=Integer.parseInt(configMembers[1]);
 					else if (configMembers[0].equals("user-file"))
 						files.add(new File(configMembers[1], (int)new java.io.File(name+"/"+configMembers[1]).length()));
 
@@ -161,7 +161,7 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void addPeer(String peerName, String IP, String port, ArrayList<File> sharedFiles) {
+	public void addPeer(String peerName, String IP, int port, ArrayList<File> sharedFiles) {
 		Peer peer = new Peer(peerName, IP, port, sharedFiles);
 		
 		peers.add(peer);

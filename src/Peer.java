@@ -20,7 +20,7 @@ public class Peer {
 	/*
 	 * 
 	 */
-	private String port;
+	private int port;
 	
 	/*
 	 * 
@@ -40,7 +40,7 @@ public class Peer {
 	/*
 	 * 
 	 */
-	public Peer(String name, String IP, String port, ArrayList<File> sharedFiles)
+	public Peer(String name, String IP, int port, ArrayList<File> sharedFiles)
 	{
 		this.name=name;
 		this.IP=IP;
