@@ -40,7 +40,10 @@ public class MessageRequestFileResponse extends Message {
 		buffer.put(filename.getBytes());
 		buffer.putInt(filesize);
 		
-		return buffer.array();
+		byte dst[] = new byte[buffer.position()]; 
+		buffer.get(dst);
+		
+		return dst;
 	}
 	
 	public int getType()

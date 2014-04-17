@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 public class NetworkModule extends Thread implements Observable, Observer
 {
 	private static int POOL_SIZE = 10;
-	private static int SELECT_TIMEOUT = 500;
+	private static int SELECT_TIMEOUT = 200;
 	
 	private String ip;
 	private int port;

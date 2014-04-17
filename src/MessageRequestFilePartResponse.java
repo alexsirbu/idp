@@ -53,7 +53,10 @@ public class MessageRequestFilePartResponse extends Message {
 		buffer.putInt(length);
 		buffer.put(content);
 		
-		return buffer.array();
+		byte dst[] = new byte[buffer.position()]; 
+		buffer.get(dst);
+		
+		return dst;
 	}
 	
 	public int getType()

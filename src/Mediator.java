@@ -239,16 +239,7 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	public void addTransferIncomingRequest(String requestingPeerName, String fileName) {
-		Peer requestingPeer = getPeer(requestingPeerName);
-		if(requestingPeer == null)
-			return;
-		
-		File requestedFile = localPeer.getSharedFile(fileName);
-		if(requestedFile == null)
-			return;
-		
-		Transfer transfer = new Transfer(requestedFile, localPeer, requestingPeer);
+	public void addTransferIncomingRequest(Transfer transfer) {
 		transfers.add(transfer);
 		gui.addTransferIncomingRequest(transfer);
 	}

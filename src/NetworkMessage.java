@@ -12,10 +12,13 @@ public class NetworkMessage {
 	}
 	
 	public NetworkMessage(byte[] encodedMessage)
-	{
+	{	
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
 		
 		int messageSize = buffer.getInt();
+		
+		Main.logger.info("Decoded message of length " + (messageSize + 4) + ".");
+		
 		if (buffer.remaining() != messageSize)
 			complete=false;
 		else
@@ -39,6 +42,8 @@ public class NetworkMessage {
 		
 		buffer.putInt(encodedMessage.length);
 		buffer.put(encodedMessage);
+		
+		Main.logger.info("Encoded message of length " + buffer.position() + ".");
 		
 		return buffer.array();
 	}

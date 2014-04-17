@@ -57,7 +57,10 @@ public class MessageRequestFilePart extends Message {
 		buffer.putInt(requester.length());
 		buffer.put(requester.getBytes());
 		
-		return buffer.array();
+		byte dst[] = new byte[buffer.position()]; 
+		buffer.get(dst);
+		
+		return dst;
 	}
 	
 	public int getType()

@@ -4,7 +4,7 @@ import java.util.TimerTask;
 
 public class NetworkModuleTimer
 {
-	private static int TIMEOUT = 3000;
+	private static int TIMEOUT = 5000;
 	
 	private Timer timer;
 	private TimerTask timerTask;

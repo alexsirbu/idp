@@ -140,7 +140,7 @@ public class GUITest {
 				return;
 		}
 		
-		mediator.addTransferIncomingRequest(requestingPeerName, requestedFileName);
+		//mediator.addTransferIncomingRequest(requestingPeerName, requestedFileName);
 		transfers.add(new Transfer(localPeerSharedFiles.get(localPeerSharedFileNo), localPeer, peers.get(requestingPeerNo)));
 	}
 	
