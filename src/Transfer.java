@@ -18,7 +18,10 @@ public class Transfer {
 	 * 
 	 */
 	private int progress;
-	
+	/*
+	 * 
+	 */
+	private int progressBytes;
 	
 	/*
 	 * 
@@ -28,6 +31,7 @@ public class Transfer {
 		this.sendingPeer = sender;
 		this.receivingPeer = receiver;
 		this.progress = 0;
+		this.progressBytes = 0;
 	}
 	
 	/*
@@ -57,6 +61,13 @@ public class Transfer {
 	public int getProgress() {
 		return progress;
 	}
+	
+	/*
+	 * 
+	 */
+	public int getProgressBytes(){
+		return progressBytes;
+	}
 
 	/*
 	 * 
@@ -64,5 +75,6 @@ public class Transfer {
 	public void updateProgress(int chunkSize) {
 		progress += (chunkSize * 100) / file.getSize();
 		progress = Math.min(progress, 100);
+		progressBytes += chunkSize;
 	}
 }
