@@ -271,4 +271,12 @@ public class Mediator {
 		transfer.updateProgress(chunkSize);
 		gui.updateTransferProgress(transfer);
 	}
+	
+	/*
+	 * 
+	 */
+	public void updateTransferProgress(Transfer transfer, int chunkSize) {
+		transfer.updateProgress(chunkSize);
+		gui.updateTransferProgress(transfer);
+	}
 }
