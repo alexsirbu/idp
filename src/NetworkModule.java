@@ -9,11 +9,13 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.log4j.Logger;
+
 
 public class NetworkModule extends Thread implements Observable, Observer
 {
 	private static int POOL_SIZE = 10;
-	private static int SELECT_TIMEOUT = 100;
+	private static int SELECT_TIMEOUT = 500;
 	
 	private String ip;
 	private int port;
@@ -23,59 +25,58 @@ public class NetworkModule extends Thread implements Observable, Observer
 	private ArrayList<Observer> observers;
 	private ExecutorService executorsPool;
 	
+	private static Logger logger = Logger.getLogger(NetworkModule.class);
 	
-	public NetworkModule() throws IOException
-	{
-		this.socketChannels = new ArrayList<SocketChannel>();
-		this.observers = new ArrayList<Observer>();
-		this.executorsPool = Executors.newFixedThreadPool(NetworkModule.POOL_SIZE);
-	}
 	
 	public NetworkModule(String ip, int port) throws IOException
 	{
 		this.ip = ip;
 		this.port = port;
+		this.socketChannels = new ArrayList<SocketChannel>();
+		this.observers = new ArrayList<Observer>();
+		this.executorsPool = Executors.newFixedThreadPool(NetworkModule.POOL_SIZE);
 	}
 	
-	public void setIp(String ip)
+	public void setLogger(Logger logger)
 	{
-		this.ip = ip;
-	}
-	
-	public void setPort(int port)
-	{
-		this.port = port;
+		NetworkModule.logger = logger;
 	}
 	
 	@Override
 	public void registerObserver(Observer observer)
 	{
+		NetworkModule.logger.info("NetworkModule: Registering observer.");
+		
 		this.observers.add(observer);
 	}
 	
 	@Override
 	public void unregisterObserver(Observer observer)
 	{
+		NetworkModule.logger.info("NetworkModule: Unregistering observer.");
+		
 		this.observers.remove(observer);
 	}
 	
 	@Override
 	public void notifyObservers(ObservableState observableState)
 	{
+		NetworkModule.logger.info("NetworkModule: Notifying observers.");
+		
 		for(Observer observer: this.observers)
 			observer.notify(observableState);
 	}
 	
 	@Override
 	public void notify(ObservableState observableState)
-	{	
+	{
+		NetworkModule.logger.info("NetworkModule: Notified by Observable.");
+		
 		try
 		{
-			NetworkModuleOperationState opState = (NetworkModuleOperationState)observableState;
-			if(opState.hasTimedOut() || opState.hasEncouteredError() || opState.hasReachedEOS())
-				this.disconnect(opState.getSocketChannel());
+			observableState.process(this);
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -86,6 +87,8 @@ public class NetworkModule extends Thread implements Observable, Observer
 	@Override
 	public void run()
 	{
+		NetworkModule.logger.info("NetworkModule: Running.");
+		
 		try
 		{
 			this.selector = Selector.open();
@@ -95,6 +98,8 @@ public class NetworkModule extends Thread implements Observable, Observer
 			serverSocketChannel.socket().bind(new InetSocketAddress(this.ip, this.port));
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 			
+			NetworkModule.logger.info("NetworkModule: Listening on " + this.ip + ":" + this.port + ".");
+			
 			do
 			{
 				this.selector.select(NetworkModule.SELECT_TIMEOUT);
@@ -102,20 +107,22 @@ public class NetworkModule extends Thread implements Observable, Observer
 				for(Iterator<SelectionKey> it = selector.keys().iterator(); it.hasNext();)
 				{
 					SelectionKey key = it.next();
-					it.remove();
 					
-					if(key.isAcceptable())
-						this.accept(key);
-					else if(key.isConnectable())
-						this.connect(key);
-					else if (key.isReadable())
+					if(this.selector.selectedKeys().contains(key))
+					{
+						if(key.isAcceptable())
+							this.accept(key);
+						else if(key.isConnectable())
+							this.connect(key);
+						else if (key.isReadable())
+							this.read(key);
+						else if (key.isWritable())
+							this.write(key);
+						
+						this.selector.selectedKeys().remove(key);
+					}
+					else if(key.isReadable())
 						this.read(key);
-					else if (key.isWritable())
-						this.write(key);
-					else if((key.interestOps() & SelectionKey.OP_READ) > 0)
-						this.read(key);
-					else if((key.interestOps() & SelectionKey.OP_WRITE) > 0)
-						this.write(key);
 				}
 			}
 			while(true);
@@ -128,6 +135,8 @@ public class NetworkModule extends Thread implements Observable, Observer
 	
 	public SocketChannel connect(String ip, int port) throws IOException
 	{
+		NetworkModule.logger.info("NetworkModule: Connecting to " + ip + ":" + port + ".");
+		
 		SocketChannel socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(false);
 		socketChannel.connect(new InetSocketAddress(ip, port));
@@ -142,6 +151,10 @@ public class NetworkModule extends Thread implements Observable, Observer
 	{
 		assert this.socketChannels.contains(socketChannel);
 		
+		InetSocketAddress addr = (InetSocketAddress)socketChannel.socket().getRemoteSocketAddress();
+		NetworkModule.logger.info("NetworkModule: Disconnecting from " + addr.getHostString() + ":" + addr.getPort() + ".");
+		
+		socketChannel.keyFor(this.selector).cancel();
 		socketChannel.close();
 		
 		this.socketChannels.remove(socketChannel);
@@ -150,6 +163,9 @@ public class NetworkModule extends Thread implements Observable, Observer
 	public void read(SocketChannel socketChannel)
 	{
 		assert this.socketChannels.contains(socketChannel);
+		
+		InetSocketAddress addr = (InetSocketAddress)socketChannel.socket().getRemoteSocketAddress();
+		NetworkModule.logger.info("NetworkModule: Reading from " + addr.getHostString() + ":" + addr.getPort() + ".");
 		
 		SelectionKey key = socketChannel.keyFor(this.selector);
 		
@@ -164,11 +180,15 @@ public class NetworkModule extends Thread implements Observable, Observer
 	{
 		assert this.socketChannels.contains(socketChannel);
 		
+		InetSocketAddress addr = (InetSocketAddress)socketChannel.socket().getRemoteSocketAddress();
+		NetworkModule.logger.info("NetworkModule: Writing to " + addr.getHostString() + ":" + addr.getPort() + ".");
+		
 		SelectionKey key = socketChannel.keyFor(this.selector);
 		
 		NetworkModuleSelectionKeyAttachment attachment = (NetworkModuleSelectionKeyAttachment)key.attachment();
 		attachment.getByteBuffer().clear();
 		attachment.getByteBuffer().put(src);
+		attachment.getByteBuffer().flip();
 		attachment.getTimer().start();
 		
 		key.interestOps(SelectionKey.OP_WRITE);
@@ -177,24 +197,37 @@ public class NetworkModule extends Thread implements Observable, Observer
 	/* TODO: Not called on timeouts. */
 	protected void accept(SelectionKey key) throws IOException
 	{
+		NetworkModule.logger.info("NetworkModule: Accepting connection.");
+		
 		ServerSocketChannel serverSocketChannel = (ServerSocketChannel)key.channel();
 		SocketChannel socketChannel = serverSocketChannel.accept();
-		socketChannel.configureBlocking(false);
-		socketChannel.register(key.selector(), 0, new NetworkModuleSelectionKeyAttachment());
-		
-		this.socketChannels.add(socketChannel);
-		
-		this.notifyObservers(NetworkModuleOperationState.getAcceptOperationState(key, false));
+		if(socketChannel != null)
+		{
+			socketChannel.configureBlocking(false);
+			socketChannel.register(key.selector(), 0, new NetworkModuleSelectionKeyAttachment());
+			
+			this.socketChannels.add(socketChannel);
+			
+			InetSocketAddress addr = (InetSocketAddress)((SocketChannel)socketChannel.keyFor(key.selector()).channel()).socket().getRemoteSocketAddress();
+			NetworkModule.logger.info("NetworkModule: Accepted connection from " + addr.getHostString() + ":" + addr.getPort() + ".");
+			
+			this.notifyObservers(new NetworkModuleAcceptState(socketChannel.keyFor(key.selector()), false, false));
+		}
 	}
 	
-	/* TODO: Not called on timeouts. */
 	protected void connect(SelectionKey key) throws IOException
-	{
+	{	
 		key.interestOps(0);
 		
-		((SocketChannel)key.channel()).finishConnect();
+		boolean encounteredError = !((SocketChannel)key.channel()).finishConnect();
 		
-		this.notifyObservers(NetworkModuleOperationState.getConnectOperationState(key, false));
+		InetSocketAddress addr = (InetSocketAddress)((SocketChannel)key.channel()).socket().getRemoteSocketAddress();
+		if(!encounteredError)
+			NetworkModule.logger.info("NetworkModule: Connected to " + addr.getHostString() + ":" + addr.getPort() + ".");
+		else
+			NetworkModule.logger.info("NetworkModule: Connection to " + addr.getHostString() + ":" + addr.getPort() + " encountered an error.");
+		
+		this.notifyObservers(new NetworkModuleConnectState(key, false, encounteredError));
 	}
 	
 	protected void read(SelectionKey key) throws IOException
@@ -205,6 +238,9 @@ public class NetworkModule extends Thread implements Observable, Observer
 		thread.registerObserver(this);
 		
 		this.executorsPool.execute(thread);
+		
+		InetSocketAddress addr = (InetSocketAddress)((SocketChannel)key.channel()).socket().getRemoteSocketAddress();
+		NetworkModule.logger.info("NetworkModule: Started read thread for " + addr.getHostString() + ":" + addr.getPort() + ".");
 	}
 	
 	protected void write(SelectionKey key) throws IOException
@@ -215,5 +251,8 @@ public class NetworkModule extends Thread implements Observable, Observer
 		thread.registerObserver(this);
 		
 		this.executorsPool.execute(thread);
+		
+		InetSocketAddress addr = (InetSocketAddress)((SocketChannel)key.channel()).socket().getRemoteSocketAddress();
+		NetworkModule.logger.info("NetworkModule: Started write thread for " + addr.getHostString() + ":" + addr.getPort() + ".");
 	}
 }

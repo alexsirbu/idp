@@ -34,11 +34,15 @@ public class Main {
 		
 		mediator.registerLocalPeer();
 		
-		NetworkModule netModule = new NetworkModule();
-		NetworkModuleAdapter net = new NetworkModuleAdapter(netModule, mediator);
-		mediator.setNet(net);
-		netModule.start();
+		NetworkModule netModule = new NetworkModule(mediator.getLocalPeerIP(), mediator.getLocalPeerPort());
+		netModule.setLogger(Main.logger);
 		
+		NetworkModuleAdapter net = new NetworkModuleAdapter(netModule, mediator);
+		net.setLogger(Main.logger);
+		
+		mediator.setNet(net);
+		
+		netModule.start();
 		netModule.join();
 	}
 }

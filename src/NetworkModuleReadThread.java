@@ -22,6 +22,7 @@ public class NetworkModuleReadThread extends NetworkModuleOperationThread
 		boolean reachedEOS = false;
 		
 		int noReadBytes = 0;
+		int noCurrReadBytes = 0;
 		
 		if(!timedOut)
 		{
@@ -29,11 +30,13 @@ public class NetworkModuleReadThread extends NetworkModuleOperationThread
 			{
 				do
 				{
-					noReadBytes = socketChannel.read(byteBuffer);
+					noCurrReadBytes = socketChannel.read(byteBuffer);
+					if(noCurrReadBytes > 0)
+						noReadBytes += noCurrReadBytes;
 				}
-				while(noReadBytes > 0);
+				while(noCurrReadBytes > 0);
 				
-				if(noReadBytes == -1)
+				if(noCurrReadBytes == -1)
 					reachedEOS = true;
 			}
 			catch(IOException e)
@@ -44,15 +47,13 @@ public class NetworkModuleReadThread extends NetworkModuleOperationThread
 			}
 		}
 		
-		this.notifyObservers(NetworkModuleOperationState.getReadOperationState(key, timedOut, encounteredError, reachedEOS));
+		if(!timedOut && !encounteredError && !reachedEOS && noReadBytes > 0)
+			attachment.getTimer().restart();
 		
-		if(!timedOut && !encounteredError && !reachedEOS)
-		{
-			if(noReadBytes > 0)
-				attachment.getTimer().restart();
-			
+		if(noReadBytes > 0 || timedOut || encounteredError || reachedEOS)
+			this.notifyObservers(new NetworkModuleReadState(key, timedOut, encounteredError, reachedEOS));
+		
+		if(key.isValid() && key.interestOps() == 0)
 			key.interestOps(SelectionKey.OP_READ);
-			this.key.selector().wakeup();
-		}
 	}
 }

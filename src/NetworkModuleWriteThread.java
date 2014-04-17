@@ -37,6 +37,6 @@ public class NetworkModuleWriteThread extends NetworkModuleOperationThread
 			e.printStackTrace();
 		}
 		
-		this.notifyObservers(NetworkModuleOperationState.getWriteOperationState(key, timedOut, encounteredError));
+		this.notifyObservers(new NetworkModuleWriteState(key, timedOut, encounteredError));
 	}
 }
