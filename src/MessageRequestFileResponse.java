@@ -4,6 +4,12 @@ public class MessageRequestFileResponse extends Message {
 	String filename;
 	int filesize;
 	
+	public MessageRequestFileResponse(String filename, int filesize)
+	{
+		this.filename = filename;
+		this.filesize = filesize;
+	}
+	
 	public MessageRequestFileResponse(byte[] encodedMessage)
 	{
 		super(encodedMessage);

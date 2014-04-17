@@ -7,6 +7,14 @@ public class MessageRequestFilePartResponse extends Message {
 	int length;
 	byte[] content;
 	
+	public MessageRequestFilePartResponse(String filename, int position, int length, byte[] content)
+	{
+		this.filename = filename;
+		this.position = position;
+		this.length = length;
+		this.content = content;
+	}
+	
 	public MessageRequestFilePartResponse(byte[] encodedMessage)
 	{
 		super(encodedMessage);

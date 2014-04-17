@@ -6,6 +6,13 @@ public class MessageRequestFilePart extends Message {
 	int position;
 	int length;
 	
+	public MessageRequestFilePart(String filename, int position, int length)
+	{
+		this.filename = filename;
+		this.position = position;
+		this.length = length;
+	}
+	
 	public MessageRequestFilePart(byte[] encodedMessage)
 	{
 		super(encodedMessage);

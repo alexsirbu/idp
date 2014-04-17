@@ -4,6 +4,11 @@ public class MessageRequestFile extends Message{
 	
 	String filename;
 	
+	public MessageRequestFile(String filename)
+	{
+		this.filename=filename;
+	}
+	
 	public MessageRequestFile(byte[] encodedMessage)
 	{
 		super(encodedMessage);
