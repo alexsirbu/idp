@@ -48,4 +48,14 @@ public class MessageRequestFileResponse extends Message {
 		return Message.REQUEST_FILE_RESPONSE_TYPE;
 	}
 	
+	public String getFilename()
+	{
+		return filename;
+	}
+	
+	public int getFilesize()
+	{
+		return filesize;
+	}
+	
 }

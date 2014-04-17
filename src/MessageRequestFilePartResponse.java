@@ -61,4 +61,24 @@ public class MessageRequestFilePartResponse extends Message {
 		return Message.REQUEST_FILE_TYPE;
 	}
 	
+	public String getFilename()
+	{
+		return filename;
+	}
+	
+	public int getPosition()
+	{
+		return position;
+	}
+	
+	public int getLength()
+	{
+		return length;
+	}
+	
+	public byte[] getContent()
+	{
+		return content;
+	}
+	
 }

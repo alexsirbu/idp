@@ -36,4 +36,10 @@ public class NetworkMessage {
 		return buffer.array();
 	}
 	
+	public Message getMessage()
+	{
+		return message;
+	}
+	
+		
 }

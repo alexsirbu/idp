@@ -44,4 +44,9 @@ public class MessageRequestFile extends Message{
 	{
 		return Message.REQUEST_FILE_TYPE;
 	}
+	
+	public String getFilename()
+	{
+		return filename;
+	}
 }
