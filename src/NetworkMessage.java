@@ -13,7 +13,12 @@ public class NetworkMessage {
 	
 	public NetworkMessage(byte[] encodedMessage)
 	{	
+		for(int i=0; i< encodedMessage.length; i++)
+			Main.logger.info("Byte "+i+" is :" + encodedMessage[i]);
+		
+		
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
+		Main.logger.info("In network message, the buffer is: " + buffer.toString());
 		
 		int messageSize = buffer.getInt();
 		
@@ -39,6 +44,8 @@ public class NetworkMessage {
 		byte[] encodedMessage = message.encode();
 		
 		ByteBuffer buffer = ByteBuffer.allocate(encodedMessage.length+(Integer.SIZE/8));
+		
+		Main.logger.info("The message size in the buffer is: "+encodedMessage.length);
 		
 		buffer.putInt(encodedMessage.length);
 		buffer.put(encodedMessage);

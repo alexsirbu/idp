@@ -51,7 +51,10 @@ public class MessageRequestFile extends Message{
 		buffer.put(requester.getBytes());
 		
 		byte dst[] = new byte[buffer.position()]; 
+		buffer.flip();
 		buffer.get(dst);
+		
+		Main.logger.info("BUFFER IS:"+dst);
 		
 		return dst;
 	}

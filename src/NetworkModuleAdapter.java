@@ -54,7 +54,10 @@ public class NetworkModuleAdapter implements Observer
 			SocketChannel socketChannel = readState.getSocketChannel();
 			ByteBuffer byteBuffer = readState.getByteBuffer();
 			
+			Main.logger.info("The buffer is "+byteBuffer.toString());
+			
 			byte buffer[] = new byte[byteBuffer.position()]; 
+			byteBuffer.flip();
 			byteBuffer.get(buffer);
 			NetworkMessage netMsg = new NetworkMessage(buffer);
 			

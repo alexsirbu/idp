@@ -152,6 +152,13 @@ public class Mediator {
 	/*
 	 * 
 	 */
+	public String getLocalPeerRealName() {
+		return localPeerRealName;
+	}
+	
+	/*
+	 * 
+	 */
 	public String getLocalPeerIP(){
 		return localPeerIP;
 	}
