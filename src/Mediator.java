@@ -152,6 +152,20 @@ public class Mediator {
 	/*
 	 * 
 	 */
+	public String getLocalPeerIP(){
+		return localPeerIP;
+	}
+	
+	/*
+	 * 
+	 */
+	public int getLocalPeerPort(){
+		return localPeerPort;
+	}
+	
+	/*
+	 * 
+	 */
 	public Peer getPeer(String peerName) {
 		for(int i = 0; i < peers.size(); i++)
 			if (peers.get(i).getName().equals(peerName))

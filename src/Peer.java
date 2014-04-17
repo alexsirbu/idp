@@ -51,6 +51,20 @@ public class Peer {
 	/*
 	 * 
 	 */
+	public String getIP(){
+		return IP;
+	}
+	
+	/*
+	 * 
+	 */
+	public int getPort(){
+		return port;
+	}
+	
+	/*
+	 * 
+	 */
 	public String getName() {
 		return name;
 	}
