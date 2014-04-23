@@ -15,53 +15,46 @@ Asistent:
 
 Catalin Gosman
 
-Tema 1 IDP:
+Tema 2 IDP:
 ===========
 
-Tema a constat in realizarea modulului grafic al aplicatiei ce se doreste a se
-implementa in decursul semestrului. Pentru realizarea acestuia, noi am decis sa
-realizam si un draft al modulului de mediator, pentru a ne ajuta si la testare
-acum, si pe viitor la realizarea si integrarea celorlalte module.
+Tema a constat in realizarea modulului de networking si de interfatarea acestuia
+cu GUI-ul aplicatiei prin intermediul unui mediator.
 
-Pentru rularea proiectului, trebuie executat doar ant in directorul principal.
-Pentru simplitate, am inclus rularea mock-ului in rularea main-ului si nu necesita
-o rulare suplimentara.
+Modulul de networking este un modul standalone, decuplat complet de restul
+aplicatiei, expunand o serie de functii specifice precum connect, read si write dar
+si o functie de registerObserver care permite inregistrarea observerilor cu privire
+la event-urile aparute in cadrul modulului de networking. Modulul implementeaza atat
+functii specifice client dar si server. Serverul este implementat multithreaded,
+utilizand un thread principal care lanseaza in executie threaduri de prelucrare a
+operatiilor de networking(read, write, connect, accept). In cazul operatiilor
+connect si accept care presupun executarea unei singuri instructiuni nonblocante,
+executia acestora nu este lansata in cadrul altui thread, ci a celui principal.
+Pentru limitarea numarului de threaduri si a modela comportamentul de server
+multithreaded, este utlizat un ExecutionPool. In momentul in care se accepta sau
+se realizeaza o noua conexiune, nu este setata nici o operatie de interes pe 
+aceasta, responsabilitatea fiind pasata observerilor care utilizeaza modulul(acesta
+expune doar o serie de primitive). In cazul in care se executa read este setata
+operatia de READ ca fiind de interes pe selection key, iar in cazul in care se
+execut write operatia de WRITE este setata ca fiind de interes. Functiile expuse
+pentru utilizarea de observeri sunt asincrone, acestea doar adaugand continutul
+de scris in buffer in cazul lui write si setand operatia de interes. In momentul
+in care threadul principal ajunge la executia operatiilor de read/write reseteaza
+operatia de interes la 0 pentru a evita executia in paralel a mai multor threaduri
+de operatii pe acelasi socket channel, iar responsabilitatea setarii acetuia
+este lasata threadurilor/observerilor. Fiecare operatie are asociat si un timer.
+Threadul operatiei read citeste cat timp numarul de octeti cititi este nenul,
+seteaza flagurile de error encountered/timeout/end of stream, realizeaza o
+parsare initiala a continutului si notifica observerii in cazul aparitie unui
+eveniment. In cazul in care nu a aparut un eveniment de tip error/timeout/end of
+stream iar octetii cititi pana la momentul respectiv nu reprezinta un mesaj intreg,
+threadul seteaza din nou operatia de READ ca fiind de interes. La fiecare executie
+a unui thread READ daca se reuseste citirea a cel putin un octet este resetat timerul.
+Threadul operatiei write incearca sa scrie in timeoutul furnizat toti octetii furnizati
+si notifica la final observerii cu privire la starea operatiei. Pentru mentinerea starii
+unei conexiuni sunt utilizate clasele de stari operatii. Intre modulul de networking
+si mediator este intercalat un adaptor care translateaza callurile din GUI in networking si
+invers. Acesta se inregistreaza ca observer la modulul de networking si contine logica
+protocolului implementat.
 
-Pentru implementarea acestei teme, am considerat necesare clase pentru File,
-in care momentan retinem numele fisierului si size-ul, Peer, in care retinem 
-numele utilizatorului si lista sa de fisiere, si Transfer, in care retinem 
-informatii despre un transfer (sender, receiver, fisier si status sub forma
-procentului deja transferat din fisier). Aceste clase le-am folosit pentru a 
-retine date despre entitatile din program si am retinut liste de Peers si 
-Transferuri la nivelul mediatorului, pentru a avea separarea nivelului grafic
-de nivelul de management al datelor. Astfel, am folosit modelul MVC, modelul
-fiind reprezentat de aceste clase, controller-ul fiind mediatorul si view-ul fiind
-modulul grafic.
-
-In cadrul modulului grafic, am extins, in primul rand, TableCellRenderer, pentru
-a face afisarea progress bar-ului in cadrul tabelului, precum si DefaultTableModel,
-pentru a face celulele needitabile (cum era mentionat si in textul temei).
-
-Pentru GUI, am creeat 3 zone, una pentru lista de peers, una pentru lista de fisiere
-si una pentru tabelul cu transferuri. Am realizat listenere pentru click pe numele
-peer-ului, pentru a afisa lista lui de fisiere, si listener pentru dublu click pentru
-a initializa transferul acelui fisier de la userul selectat. De asemenea, am creeat
-metode pentru adaugarea de useri, stergerea de useri (cu stergerea fisierelor in cazul
-in care utilizatorul selectat curent este cel care este sters), updatarea fisierelor
-unui utilizator, initializarea unui transfer catre un peer si updatarea progresului unui
-transfer. Aceste functii sunt apelate din cadrul mediatorului, in cazul aparitiei acestor
-evenimente.
-
-Pentru testare, am creeat o clasa de test, care initializeaza lista de peers cu un numar
-random de peers, fiecare cu un numar random de fisiere, si initializeaza si lista 
-utilizatorului curent cu un numar de fisiere, apoi porneste un SwingWorker, care
-executa, la diferite perioade de timp, una din urmatoarele actiuni:
-- adaugarea unui nou peer
-- stergerea unui peer existent
-- modificarea listei fisierelor unui peer
-- initializarea unei cereri de transfer
-- updatarea unui transfer deja existent
-Utilizand aceasta clasa, testam integrarea GUI-ului cu mediatorul, cum era precizat in 
-enunt. Nu am realizat teste grafice (click-uri), deoarece nu era mentionat in enunt acest
-lucru si am avut si probleme cu folosirea jar-ului de teste utilizat la laborator.
 
