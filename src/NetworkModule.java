@@ -103,27 +103,35 @@ public class NetworkModule extends Thread implements Observable, Observer
 			
 			do
 			{
-				this.selector.select(NetworkModule.SELECT_TIMEOUT);
-				
-				for(Iterator<SelectionKey> it = selector.keys().iterator(); it.hasNext();)
+				try
 				{
-					SelectionKey key = it.next();
+					this.selector.select(NetworkModule.SELECT_TIMEOUT);
 					
-					if(this.selector.selectedKeys().contains(key))
+					for(Iterator<SelectionKey> it = selector.keys().iterator(); it.hasNext();)
 					{
-						if(key.isAcceptable())
-							this.accept(key);
-						else if(key.isConnectable())
-							this.connect(key);
-						else if (key.isReadable())
-							this.read(key);
-						else if (key.isWritable())
-							this.write(key);
+						SelectionKey key = it.next();
 						
-						this.selector.selectedKeys().remove(key);
+						if(this.selector.selectedKeys().contains(key))
+						{
+							if(key.isAcceptable())
+								this.accept(key);
+							else if(key.isConnectable())
+								this.connect(key);
+							else if (key.isReadable())
+								this.read(key);
+							else if (key.isWritable())
+								this.write(key);
+							
+							this.selector.selectedKeys().remove(key);
+						}
+						else if(key.interestOps() == SelectionKey.OP_READ)
+							this.read(key);
 					}
-					else if(key.interestOps() == SelectionKey.OP_READ)
-						this.read(key);
+					
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
 				}
 			}
 			while(true);

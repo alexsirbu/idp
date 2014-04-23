@@ -25,7 +25,9 @@ public class MessageRequestFilePart extends Message {
 		
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
 		
-		type = buffer.getInt();
+		type = buffer.getInt();		
+		assert(type == Message.REQUEST_FILE_PART_TYPE);
+
 		filenameSize = buffer.getInt();
 		
 		byte[] bytes= new byte[filenameSize];
