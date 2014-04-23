@@ -189,6 +189,8 @@ public class NetworkModuleAdapter implements Observer
 		{
 			/* TODO: Handle error. */
 		}
+		else
+			this.networkModule.read(writeState.getSocketChannel());
 	}
 	
 	public void processNetworkModuleConnect(NetworkModuleConnectState connectState)
