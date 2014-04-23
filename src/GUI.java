@@ -184,7 +184,7 @@ public class GUI extends JPanel {
 						
 						transfersModel.addRow(new Object[] {
 							peerName,
-							myself.getName(),
+							Main.LOCAL_PEER_NAME,
 							fileName,
 							new JProgressBar(0, 100),
 							"Receiving"
@@ -235,7 +235,10 @@ public class GUI extends JPanel {
 	 */
 	public void addPeer(Peer peer) {
 		assert peersModel != null;
-		peersModel.addElement(peer.getName());
+		if (peer.getName().equals(this.mediator.getLocalPeerRealName()))
+			peersModel.addElement(Main.LOCAL_PEER_NAME);
+		else
+			peersModel.addElement(peer.getName());
 	}
 	
 	/*
@@ -275,9 +278,19 @@ public class GUI extends JPanel {
 	 * 
 	 */
 	public void addTransferIncomingRequest(Transfer transfer) {
+		
+		String sending = transfer.getSendingPeer().getName();
+		String receiving = transfer.getReceivingPeer().getName();
+		
+		if (sending.equals(mediator.getLocalPeerRealName()))
+			sending=Main.LOCAL_PEER_NAME;
+		
+		if (receiving.equals(mediator.getLocalPeerRealName()))
+			receiving=Main.LOCAL_PEER_NAME;
+			
 		transfersModel.addRow(new Object[] {
-			transfer.getSendingPeer().getName(),
-			transfer.getReceivingPeer().getName(),
+			sending,
+			receiving,
 			transfer.getFile().getName(),
 			new JProgressBar(0, 100),
 			"Sending"
@@ -295,6 +308,12 @@ public class GUI extends JPanel {
 			String currentSenderName = (String)(transfersModel.getValueAt(i, 0));
 			String currentReceiverName = (String)(transfersModel.getValueAt(i, 1));
 			String currentFileName = (String)(transfersModel.getValueAt(i, 2));
+			
+			if (currentSenderName.equals(Main.LOCAL_PEER_NAME))
+				currentSenderName=this.mediator.getLocalPeerRealName();
+			
+			if (currentReceiverName.equals(Main.LOCAL_PEER_NAME))
+				currentReceiverName=this.mediator.getLocalPeerRealName();
 			
 			if(currentSenderName.equals(transfer.getSendingPeer().getName())
 					&& currentReceiverName.equals(transfer.getReceivingPeer().getName())

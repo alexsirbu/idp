@@ -81,7 +81,7 @@ public class Mediator {
 		for(java.io.File file : folder.listFiles())
 			files.add(new File(file.getName(), (int)file.length()));
 			
-		addLocalPeer(Main.LOCAL_PEER_NAME, files);
+		addLocalPeer(this.getLocalPeerRealName(), files);
 		
 		// TODO Stage 3: here or in addLocalPeer, send info to server with my files
 		getPeers();
