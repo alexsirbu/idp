@@ -39,7 +39,7 @@ public class MessageRequestFilePartResponse extends Message {
 		content = new byte[length];
 		
 		for (int i=0; i<length; i++)
-			content[i]=buffer.get(i);
+			content[i]=buffer.get();
 	}
 	
 	public byte[] encode()

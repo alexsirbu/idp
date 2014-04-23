@@ -33,12 +33,14 @@ public class MessageFactoryTest extends TestCase {
 	
 	public void testRequestFilePartResponse()
 	{
-		Message msg = new MessageRequestFilePartResponse("filename", 10, 10, "requester".getBytes());
+		Message msg = new MessageRequestFilePartResponse("filename", 10, 10, "requester!".getBytes());
 		Message decoded = MessageFactory.decodeMessage(msg.encode());
+		System.out.println(new String(((MessageRequestFilePartResponse)decoded).getContent()));
+
 		assertTrue("Correct message type", decoded.getType()==Message.REQUEST_FILE_PART_RESPONSE_TYPE);
 		assertTrue("Correct filename", ((MessageRequestFilePartResponse)decoded).getFilename().equals("filename"));
 		assertTrue("Correct length", ((MessageRequestFilePartResponse)decoded).getLength() == 10);
 		assertTrue("Correct position", ((MessageRequestFilePartResponse)decoded).getPosition() == 10);
-		//assertTrue("Correct content", new String(((MessageRequestFilePartResponse)decoded).getContent()).equals("requester"));		
+		assertTrue("Correct content", new String(((MessageRequestFilePartResponse)decoded).getContent()).equals("requester!"));		
 	}
 }
