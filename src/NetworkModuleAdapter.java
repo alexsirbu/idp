@@ -142,6 +142,18 @@ public class NetworkModuleAdapter implements Observer
 						File file = transfer.getFile();
 						file.setSize(msg.getFilesize());
 						
+						FileOperationsJavaNIO fop = null;
+						
+						try
+						{
+							fop = new FileOperationsJavaNIO(this.mediator.getLocalPeerRealName()+"/"+msg.getFilename()); 
+							fop.overWrite(new byte[0]);
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						
 						MessageRequestFilePart respMsg = new MessageRequestFilePart(
 							msg.getFilename(),
 							0,

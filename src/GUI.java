@@ -123,6 +123,8 @@ public class GUI extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String peerName = (String)peersList.getSelectedValue();
+				if (peerName.equals(Main.LOCAL_PEER_NAME))
+					peerName=mediator.getLocalPeerRealName();
 				Peer peer = mediator.getPeer(peerName);
 				
 				filesModel.clear();
@@ -163,11 +165,16 @@ public class GUI extends JPanel {
 					
 					String peerName = ((String)(peersList.getSelectedValue()));
 					String fileName = ((String)(filesList.getSelectedValue()));
+					if (peerName.equals(Main.LOCAL_PEER_NAME))
+						peerName=mediator.getLocalPeerRealName();
 					
 					for(int i = 0; i < rows; i++)
 					{
 						String presentPeerName = (String)(transfersModel.getValueAt(i, 0));
 						String presentFileName = (String)(transfersModel.getValueAt(i, 2));
+						
+						if (presentPeerName.equals(Main.LOCAL_PEER_NAME))
+							presentPeerName=mediator.getLocalPeerRealName();
 						
 						if (presentPeerName.equals(peerName) && presentFileName.equals(fileName))
 						{
@@ -176,8 +183,8 @@ public class GUI extends JPanel {
 						}
 					}
 					
-					if(!alreadyDownloading)
-					{
+					if(!alreadyDownloading && !peerName.equals(mediator.getLocalPeerRealName()))
+					{						
 						Peer peer = mediator.getPeer(peerName);
 						Peer myself = mediator.getLocalPeer();
 						File file = peer.getSharedFile(fileName);
@@ -319,7 +326,21 @@ public class GUI extends JPanel {
 					&& currentReceiverName.equals(transfer.getReceivingPeer().getName())
 					&& currentFileName.equals(transfer.getFile().getName()))
 			{	
-				((JProgressBar)transfersModel.getValueAt(i, 3)).setValue(transfer.getProgress());
+				final JProgressBar bar = (JProgressBar)transfersModel.getValueAt(i, 3);
+				final Transfer ftransfer = transfer;
+				final GUI fgui = this;
+				
+				SwingUtilities.invokeLater(new Runnable(){
+
+					@Override
+					public void run() {
+						int old = bar.getValue();
+						bar.setValue(ftransfer.getProgress());
+						fgui.transfersTable.repaint();
+						//bar.firePropertyChange("value", old, ftransfer.getProgress());
+					}
+					
+				});
 				if (transfer.getProgress() == 100)
 					transfersModel.setValueAt("Completed", i, 4);
 				break;
