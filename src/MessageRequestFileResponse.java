@@ -20,6 +20,7 @@ public class MessageRequestFileResponse extends Message {
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
 		
 		type = buffer.getInt();
+		assert(type == Message.REQUEST_FILE_RESPONSE_TYPE);
 		filenameSize = buffer.getInt();
 		
 		byte[] bytes= new byte[filenameSize];

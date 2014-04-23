@@ -334,10 +334,8 @@ public class GUI extends JPanel {
 
 					@Override
 					public void run() {
-						int old = bar.getValue();
 						bar.setValue(ftransfer.getProgress());
 						fgui.transfersTable.repaint();
-						//bar.firePropertyChange("value", old, ftransfer.getProgress());
 					}
 					
 				});
