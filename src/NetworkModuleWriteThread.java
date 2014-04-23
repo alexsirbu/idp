@@ -24,7 +24,8 @@ public class NetworkModuleWriteThread extends NetworkModuleOperationThread
 		{
 			do
 			{
-				socketChannel.write(byteBuffer);
+				int noWrittenBytes = socketChannel.write(byteBuffer);
+				Main.logger.info("Wrote " + noWrittenBytes + "bytes.");
 				
 				timedOut = attachment.getTimer().hasTimedOut();
 			}
@@ -36,6 +37,8 @@ public class NetworkModuleWriteThread extends NetworkModuleOperationThread
 			
 			e.printStackTrace();
 		}
+		
+		Main.logger.info("Wrote message with timeout variable value " + timedOut + ".");
 		
 		this.notifyObservers(new NetworkModuleWriteState(key, timedOut, encounteredError));
 	}
