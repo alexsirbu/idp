@@ -57,4 +57,44 @@ si mediator este intercalat un adaptor care translateaza callurile din GUI in ne
 invers. Acesta se inregistreaza ca observer la modulul de networking si contine logica
 protocolului implementat.
 
+Protocolul pe care l-am utilizat in cadrul aplicatiei este urmatorul:
+- mesajele care se trimit intre entitati sunt NetworkMessages, care inglobeaza un mesaj 
+efectiv si contine la inceput lungimea efectiva a mesajului, pentru a sti care este 
+lungimea asteptata
+- protocolul in sine consta in 4 tipuri de mesaje:
+-- MessageRequestFile - cerere de fisier, contine numele fisierului si numele clientului
+care il cere, pentru a-l putea afisa cel care raspunde in interfata
+-- MessageRequestFileResponse - raspuns la mesajul anterior, ce contine filesize-ul 
+-- MessageRequestFilePart - cerere de content, de o anumita lungime de la o pozitie; 
+se cer bucati de maxim 500 de octeti, pana se termina fisierul
+-- MessageRequestFilePartResponse - raspuns la mesajul anterior, contine content-ul cerut
+In realizarea acestui protocol am folosit Factory pattern, pentru decodarea mesajelor
+venite pe retea.
 
+Am realizat o interfata pentru operatii cu fisiere si o implementare, cu Java.NIO, pentru
+operatii uzuale de citire si scriere.
+
+Am realizt si testarea cu ajutorul JUnit, pentru operatiile cu fisiere si pentru operatiile
+cu mesaje (encodare, decodare, folosire factory, creare mesaje networking). Am considerat
+ca pentru aceste clase se preteaza testarea unitara, deoarece partea de networking, in sine, 
+era greu de testat cu astfel de teste (pentru GUI am realizat teste etapa anterioara).
+
+Logarea cu log4j am facut-o cum s-a specificat in enunt, cu fisier de configurare, in fisiere
+pentru fiecare client si la consola, diferentiat in functie de nivelul de logging.
+
+Pentru configurare, am folosit indicatiile din enunt, folosind aceleasi fisiere, singura diferenta
+constand in structura fisierului de config din folderul specific - acesta contine si hostname-ul
+si portul, pe langa fisiere (nu exista o alta modalitate prin care sa se primeasca aceste informatii).
+Implementarea actuala poate sa fie usor modificata pentru tema 3.
+
+De asemenea, am realizat si build.xml-ul care instantiaza 3 clienti, client1, client2, client3, 
+atasand si fisierele corespunzatoare pentru a putea testa. Acestia pornesc in ordine, cu timpi de
+asteptare inca. Fisierul corespunzator clientului 2 este multipart conform protocolului nostru,
+pentru a vedea trimiterea in mai multe parti.
+
+Distributia taskurilor a fost urmatoarea:
+- Cristi - modulul de networking 
+- Alex - mesaje, logging, build.xml, operatii cu fisiere, teste
+- amandoi - adaptorul
+Consideram ca, impartind astfel taskurile, workload-ul a fost asemanator, si fiecare a putut sa 
+lucreze la partea lui fara sa-l influenteze major pe celalalt, pana la partea de integrare.
