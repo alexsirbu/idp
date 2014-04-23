@@ -20,4 +20,14 @@ public class MessageFactoryTest extends TestCase {
 		assertTrue("Correct filesize", ((MessageRequestFileResponse)decoded).getFilesize() == 1024);		
 	}
 
+	public void testRequestFilePart()
+	{
+		Message msg = new MessageRequestFilePart("filename", 10, 10, "requester");
+		Message decoded = MessageFactory.decodeMessage(msg.encode());
+		assertTrue("Correct message type", decoded.getType()==Message.REQUEST_FILE_PART_TYPE);
+		assertTrue("Correct filename", ((MessageRequestFilePart)decoded).getFilename().equals("filename"));
+		assertTrue("Correct length", ((MessageRequestFilePart)decoded).getLength() == 10);
+		assertTrue("Correct position", ((MessageRequestFilePart)decoded).getPosition() == 10);
+		assertTrue("Correct requester", ((MessageRequestFilePart)decoded).getRequester().equals("requester"));		
+	}
 }

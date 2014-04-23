@@ -49,7 +49,7 @@ public class MessageRequestFilePart extends Message {
 	{
 		ByteBuffer buffer = ByteBuffer.allocate(2000);
 		
-		buffer.putInt(Message.REQUEST_FILE_TYPE);
+		buffer.putInt(Message.REQUEST_FILE_PART_TYPE);
 		buffer.putInt(filename.length());
 		buffer.put(filename.getBytes());
 		buffer.putInt(position);
@@ -66,7 +66,7 @@ public class MessageRequestFilePart extends Message {
 	
 	public int getType()
 	{
-		return Message.REQUEST_FILE_TYPE;
+		return Message.REQUEST_FILE_PART_TYPE;
 	}
 	
 	public String getFilename()
