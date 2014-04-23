@@ -53,10 +53,11 @@ public class FileOperationsJavaNIO extends FileOperations{
 
 	@Override
 	public void overWrite(byte[] content) throws IOException{
-		RandomAccessFile file = new RandomAccessFile(filename, "w");
+		RandomAccessFile file = new RandomAccessFile(filename, "rw");
 		FileChannel channel = file.getChannel();
 		
-		_writeNumberFromPositionInternal(content, (int)channel.size(), channel);
+		channel=channel.truncate(0);
+		_writeNumberFromPositionInternal(content, 0, channel);
 		
 		channel.close();
 		file.close();		
@@ -64,7 +65,7 @@ public class FileOperationsJavaNIO extends FileOperations{
 
 	@Override
 	public void append(byte[] content) throws IOException{
-		RandomAccessFile file = new RandomAccessFile(filename, "w");
+		RandomAccessFile file = new RandomAccessFile(filename, "rw");
 		FileChannel channel = file.getChannel();
 		
 		_writeNumberFromPositionInternal(content, (int)channel.size(), channel);
@@ -75,7 +76,7 @@ public class FileOperationsJavaNIO extends FileOperations{
 
 	@Override
 	public void writeAtPosition(byte[] content, int position) throws IOException{
-		RandomAccessFile file = new RandomAccessFile(filename, "w");
+		RandomAccessFile file = new RandomAccessFile(filename, "rw");
 		FileChannel channel = file.getChannel();
 		
 		_writeNumberFromPositionInternal(content, position, channel);
