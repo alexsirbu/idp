@@ -13,9 +13,6 @@ public class NetworkMessage {
 	
 	public NetworkMessage(byte[] encodedMessage)
 	{	
-		for(int i=0; i< encodedMessage.length; i++)
-			Main.logger.info("Byte "+i+" is :" + encodedMessage[i]);
-		
 		
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
 		Main.logger.info("In network message, the buffer is: " + buffer.toString());
@@ -34,6 +31,8 @@ public class NetworkMessage {
 				messageBytes[i]=buffer.get();
 			
 			message = MessageFactory.decodeMessage(messageBytes);
+
+			Main.logger.warn("Received message of type " + message.getType());
 			
 			complete = true;
 		}
