@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -121,7 +122,7 @@ public class NetworkModule extends Thread implements Observable, Observer
 						
 						this.selector.selectedKeys().remove(key);
 					}
-					else if(key.isReadable())
+					else if(key.interestOps() == SelectionKey.OP_READ)
 						this.read(key);
 				}
 			}
@@ -139,7 +140,9 @@ public class NetworkModule extends Thread implements Observable, Observer
 		
 		SocketChannel socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(false);
+		socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 		socketChannel.connect(new InetSocketAddress(ip, port));
+		
 		socketChannel.register(this.selector, SelectionKey.OP_CONNECT, new NetworkModuleSelectionKeyAttachment());
 		
 		this.socketChannels.add(socketChannel);
@@ -169,7 +172,8 @@ public class NetworkModule extends Thread implements Observable, Observer
 		attachment.getByteBuffer().clear();
 		attachment.getTimer().start();
 		
-		key.interestOps(SelectionKey.OP_READ);
+		Main.logger.info("Changing ops to op read in read 1.");
+		key.interestOps(SelectionKey.OP_READ);		
 	}
 	
 	public void write(SocketChannel socketChannel, byte[] src)
@@ -198,6 +202,7 @@ public class NetworkModule extends Thread implements Observable, Observer
 		if(socketChannel != null)
 		{
 			socketChannel.configureBlocking(false);
+			socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 			socketChannel.register(key.selector(), 0, new NetworkModuleSelectionKeyAttachment());
 			
 			this.socketChannels.add(socketChannel);

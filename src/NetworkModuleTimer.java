@@ -17,12 +17,14 @@ public class NetworkModuleTimer
 		this.timer = new Timer();
 		this.timeout = NetworkModuleTimer.TIMEOUT;
 		this.timedOut = false;
-		
-		
+		this.timerTask = null;
 	}
 	
 	public void start()
 	{
+		if(this.timerTask != null)
+			this.stop();
+		
 		this.timedOut = false;
 		
 		final NetworkModuleTimer extThis = this;

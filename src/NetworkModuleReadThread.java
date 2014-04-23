@@ -47,13 +47,24 @@ public class NetworkModuleReadThread extends NetworkModuleOperationThread
 			}
 		}
 		
+		Main.logger.info("Read " + noReadBytes + "bytes.");
+		
 		if(!timedOut && !encounteredError && !reachedEOS && noReadBytes > 0)
 			attachment.getTimer().restart();
 		
-		if(noReadBytes > 0 || timedOut || encounteredError || reachedEOS)
-			this.notifyObservers(new NetworkModuleReadState(key, timedOut, encounteredError, reachedEOS));
+		NetworkMessage netMsg = null;
 		
-		if(key.isValid() && key.interestOps() == 0)
+		if(byteBuffer.position() > 0)
+		{
+			byte buffer[] = new byte[byteBuffer.position()]; 
+			byteBuffer.flip();
+			byteBuffer.get(buffer);
+			netMsg = new NetworkMessage(buffer);
+		}
+		
+		if((netMsg != null && netMsg.getComplete()) || timedOut || encounteredError || reachedEOS)
+			this.notifyObservers(new NetworkModuleReadState(key, timedOut, encounteredError, reachedEOS));
+		else
 			key.interestOps(SelectionKey.OP_READ);
 	}
 }

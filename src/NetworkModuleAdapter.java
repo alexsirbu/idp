@@ -185,6 +185,8 @@ public class NetworkModuleAdapter implements Observer
 	
 	public void processNetworkModuleWrite(NetworkModuleWriteState writeState)
 	{
+		NetworkModuleAdapter.logger.info("Write notification.");
+		
 		if(writeState.hasTimedOut() || writeState.hasEncouteredError())
 		{
 			/* TODO: Handle error. */
