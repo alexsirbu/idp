@@ -99,7 +99,7 @@ public class NetworkModuleAdapter implements Observer
 						
 						try
 						{
-							fop = new FileOperationsJavaNIO(msg.getFilename()); 
+							fop = new FileOperationsJavaNIO(this.mediator.getLocalPeerRealName()+"/"+msg.getFilename()); 
 							fop.append(msg.getContent());
 						}
 						catch(Exception e)
@@ -165,7 +165,7 @@ public class NetworkModuleAdapter implements Observer
 					
 					try
 					{
-						fop = new FileOperationsJavaNIO(msg.getFilename()); 
+						fop = new FileOperationsJavaNIO(this.mediator.getLocalPeerRealName()+"/"+msg.getFilename()); 
 						content = fop.readNumberFromPosition(msg.getLength(), msg.getPosition());
 					}
 					catch(Exception e)
