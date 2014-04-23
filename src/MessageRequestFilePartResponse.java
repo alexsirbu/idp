@@ -54,6 +54,7 @@ public class MessageRequestFilePartResponse extends Message {
 		buffer.put(content);
 		
 		byte dst[] = new byte[buffer.position()]; 
+		buffer.flip();
 		buffer.get(dst);
 		
 		return dst;

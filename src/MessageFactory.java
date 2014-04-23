@@ -7,7 +7,7 @@ public class MessageFactory {
 		ByteBuffer buffer = ByteBuffer.wrap(encodedMessage);
 		
 		int type = buffer.getInt();
-		
+				
 		if (type == Message.REQUEST_FILE_PART_RESPONSE_TYPE)
 			return new MessageRequestFilePartResponse(encodedMessage);
 		else if (type == Message.REQUEST_FILE_PART_TYPE)
