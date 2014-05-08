@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>server</name>
+			<type>2</type>
+			<location>/home/cristian/Documents/idp/serverClient/src/server</location>
+		</link>
+	</linkedResources>
 </projectDescription>

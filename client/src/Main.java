@@ -1,5 +1,8 @@
 import org.apache.log4j.*;
 
+import server.SharixServerStub;
+import server.SharixServerStub.RegisterPeer;
+
 /*
  * 
  */
@@ -18,6 +21,15 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		if (args.length < 1)
 			throw new Exception("Not enough parameters given.\nParameters required: user_name");
+		
+		SharixServerStub serverStub = new SharixServerStub();
+		RegisterPeer rp = new RegisterPeer();
+		rp.setName("Test");
+		rp.setIp("127.0.0.1");
+		rp.setPort(6666);
+		serverStub.registerPeer(rp);
+		
+		System.out.println("Done!");
 		
 		FileAppender appender = new FileAppender();
 		appender.setName("A2");
