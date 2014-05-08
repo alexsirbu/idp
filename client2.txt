@@ -1,3 +1,0 @@
-user-ip: 127.0.0.1
-user-port: 3002
-users-folder: users
