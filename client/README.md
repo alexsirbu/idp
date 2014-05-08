@@ -39,6 +39,22 @@ Integrarea serviciului web a constat in adaugarea unor apeluri la distanta in ca
 pentru inregistrare peer, updatare lista de fisiere precum si preluarea de la serviciu a listei
 de peeri si a fisierelor acestora.
 
+Aceste apeluri la distanta au fost (conform enuntului, nu am implementat in plus nici o functionalitate):
+- la inregistrare - apel pentru inregistrare peer curent, apel adaugare fisiere peer curent, 
+functie updatare peers
+- functie updatare peers - eliminare peers din lista + din gui; apel de preluare nume, ip si port peers; 
+pentru fiecare peer, preluare fisiere; adaugare peers din nou in lista de peers(si, implicit, si in gui)
+- la inceput download, apel updatare peers
+- daca se primeste un request de la un peer necunoscut, atunci isi face update la peers inainte
+de a trata requestul
+- cand se inchide frame-ul, apel de unregister
+
+Updatarea listei de peers are loc doar in momentul in care se initiaza sau este initiat un download,
+conform enuntului. 
+
+Pentru executie, trebuie pornit din eclipse serviciul, apoi apeland ant se pornesc si clientii 
+(ca la tema 2).
+
 Distributia taskurilor a fost urmatoarea:
 - Cristi - Serverul pt serviciul web si un server stub pentru acesta
 - Alex - Integrarea serviciului web cu aplicatia, build.xml
