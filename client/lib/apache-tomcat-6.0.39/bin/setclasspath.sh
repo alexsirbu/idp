@@ -17,6 +17,8 @@
 
 # -----------------------------------------------------------------------------
 #  Set CLASSPATH and Java options
+#
+#  $Id: setclasspath.sh 1432355 2013-01-12 01:37:43Z schultz $
 # -----------------------------------------------------------------------------
 
 # Make sure prerequisite environment variables are set

@@ -21,7 +21,9 @@ package util;
  *
  * @author Craig R. McClanahan
  * @author Tim Tye
+ * @version $Id: HTMLFilter.java 939521 2010-04-30 00:16:33Z kkolinko $
  */
+
 public final class HTMLFilter {
 
 

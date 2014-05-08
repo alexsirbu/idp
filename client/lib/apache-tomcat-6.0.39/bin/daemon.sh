@@ -17,6 +17,8 @@
 #
 # -----------------------------------------------------------------------------
 # Commons Daemon wrapper script.
+#
+# $Id: daemon.sh 1202058 2011-11-15 06:37:12Z mturk $
 # -----------------------------------------------------------------------------
 #
 # resolve links - $0 may be a softlink
@@ -60,11 +62,6 @@ do
         shift; shift;
         continue
     ;;
-    --service-start-wait-time )
-        SERVICE_START_WAIT_TIME="$2"
-        shift; shift;
-        continue
-    ;;
     * )
         break
     ;;
@@ -105,8 +102,6 @@ test ".$CATALINA_HOME" = . && CATALINA_HOME=`cd "$DIRNAME/.." >/dev/null; pwd`
 test ".$CATALINA_BASE" = . && CATALINA_BASE="$CATALINA_HOME"
 test ".$CATALINA_MAIN" = . && CATALINA_MAIN=org.apache.catalina.startup.Bootstrap
 test ".$JSVC" = . && JSVC="$CATALINA_BASE/bin/jsvc"
-# Set the default service-start wait time if necessary
-test ".$SERVICE_START_WAIT_TIME" = . && SERVICE_START_WAIT_TIME=10
 
 # Ensure that any user defined CLASSPATH variables are not used on startup,
 # but allow them to be specified in setenv.sh, in rare case when it is needed.
@@ -172,7 +167,7 @@ case "$1" in
       $JSVC_OPTS \
       -java-home "$JAVA_HOME" \
       -pidfile "$CATALINA_PID" \
-      -wait "$SERVICE_START_WAIT_TIME" \
+      -wait 10 \
       -nodetach \
       -outfile "&1" \
       -errfile "&2" \
@@ -190,7 +185,7 @@ case "$1" in
       -java-home "$JAVA_HOME" \
       -user $TOMCAT_USER \
       -pidfile "$CATALINA_PID" \
-      -wait "$SERVICE_START_WAIT_TIME" \
+      -wait 10 \
       -outfile "$CATALINA_OUT" \
       -errfile "&1" \
       -classpath "$CLASSPATH" \

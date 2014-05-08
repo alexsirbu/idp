@@ -26,14 +26,14 @@
       body {
           color: #000000;
           background-color: #FFFFFF;
-          font-family: Arial, "Times New Roman", Times, serif;
+	  font-family: Arial, "Times New Roman", Times, serif;
           margin: 10px 0px;
       }
 
     img {
        border: none;
     }
-
+    
     a:link, a:visited {
         color: blue
     }
@@ -49,9 +49,9 @@
 
     td {
         color: #000000;
-        font-family: Arial, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
     }
-
+    
     td.menu {
         background: #FFDC75;
     }
@@ -66,7 +66,7 @@
         font-size: 110%;
         margin-left: 2.5em;
     }
-
+    
      #banner {
         margin-bottom: 12px;
      }
@@ -92,14 +92,14 @@
     <tr>
       <td align="left" style="width:130px">
         <a href="http://tomcat.apache.org/">
-          <img src="tomcat.gif" height="92" width="130" alt="The Mighty Tomcat - MEOW!"/>
-        </a>
+	  <img src="tomcat.gif" height="92" width="130" alt="The Mighty Tomcat - MEOW!"/>
+	</a>
       </td>
       <td align="left" valign="top"><b><%= application.getServerInfo() %></b></td>
       <td align="right">
         <a href="http://www.apache.org/">
-          <img src="asf-logo-wide.gif" height="51" width="537" alt="The Apache Software Foundation"/>
-        </a>
+	  <img src="asf-logo-wide.gif" height="51" width="537" alt="The Apache Software Foundation"/>
+	</a>
        </td>
      </tr>
 </table>
@@ -111,30 +111,33 @@
         <td valign="top">
             <table width="100%" border="1" cellspacing="0" cellpadding="3">
                 <tr>
-                  <th>Administration</th>
+		  <th>Administration</th>
                 </tr>
                 <tr>
-                  <td class="menu">
-                    <a href="/manager/status">Status</a><br/>
-                    <a href="/manager/html">Tomcat&nbsp;Manager</a><br/>
+		  <td class="menu">
+		    <a href="manager/status">Status</a><br/>
+                    <!--<a href="admin">Tomcat&nbsp;Administration</a><br/>-->
+                    <a href="manager/html">Tomcat&nbsp;Manager</a><br/>
                     &nbsp;
                   </td>
                 </tr>
             </table>
-            <br />
+
+	    <br />
             <table width="100%" border="1" cellspacing="0" cellpadding="3">
                 <tr>
-                  <th>Documentation</th>
+		  <th>Documentation</th>
                 </tr>
                 <tr>
                   <td class="menu">
                     <a href="RELEASE-NOTES.txt">Release&nbsp;Notes</a><br/>
-                    <a href="/docs/changelog.html">Change&nbsp;Log</a><br/>
-                    <a href="/docs">Tomcat&nbsp;Documentation</a><br/>
+                    <a href="docs/changelog.html">Change&nbsp;Log</a><br/>
+                    <a href="docs">Tomcat&nbsp;Documentation</a><br/>                        &nbsp;
                     &nbsp;
-                    </td>
+		    </td>
                 </tr>
             </table>
+	    
             <br/>
             <table width="100%" border="1" cellspacing="0" cellpadding="3">
                 <tr>
@@ -143,41 +146,56 @@
                 <tr>
                   <td class="menu">
                     <a href="http://tomcat.apache.org/">Home&nbsp;Page</a><br/>
-                    <a href="http://tomcat.apache.org/faq/">FAQ</a><br/>
+		    <a href="http://tomcat.apache.org/faq/">FAQ</a><br/>
                     <a href="http://tomcat.apache.org/bugreport.html">Bug&nbsp;Database</a><br/>
                     <a href="http://mail-archives.apache.org/mod_mbox/tomcat-users/">Users&nbsp;Mailing&nbsp;List</a><br/>
                     <a href="http://mail-archives.apache.org/mod_mbox/tomcat-dev/">Developers&nbsp;Mailing&nbsp;List</a><br/>
                     <a href="irc://irc.freenode.net/#tomcat">IRC</a><br/>
-                    &nbsp;
+		    &nbsp;
                   </td>
                 </tr>
             </table>
+	    
             <br/>
             <table width="100%" border="1" cellspacing="0" cellpadding="3">
                 <tr>
-                  <th>Miscellaneous</th>
+                  <th>Examples</th>
                 </tr>
                 <tr>
                   <td class="menu">
-                    <a href="/examples/servlets/">Servlets Examples</a><br/>
-                    <a href="/examples/jsp/">JSP Examples</a><br/>
-                    <a href="http://wiki.apache.org/tomcat/Specifications">Specifications</a><br/>
-                        &nbsp;
+                    <a href="examples/servlets/">Servlets Examples</a><br/>
+                    <a href="examples/jsp/">JSP Examples</a><br/>
+                    <a href="webdav/">WebDAV&nbsp;capabilities</a><br/>
+     		    &nbsp;
+                  </td>
+                </tr>
+            </table>
+	    
+            <br/>
+            <table width="100%" border="1" cellspacing="0" cellpadding="3">
+                <tr>
+		  <th>Miscellaneous</th>
+                </tr>
+                <tr>
+                  <td class="menu">
+                    <a href="http://java.sun.com/products/jsp">Sun's&nbsp;Java&nbsp;Server&nbsp;Pages&nbsp;Site</a><br/>
+                    <a href="http://java.sun.com/products/servlet">Sun's&nbsp;Servlet&nbsp;Site</a><br/>
+    		    &nbsp;
                   </td>
                 </tr>
             </table>
         </td>
 
         <td style="width:20px">&nbsp;</td>
-
+	
         <!-- Body -->
         <td align="left" valign="top">
           <p id="congrats">If you're seeing this page via a web browser, it means you've setup Tomcat successfully. Congratulations!</p>
-
+ 
           <p>As you may have guessed by now, this is the default Tomcat home page. It can be found on the local filesystem at:</p>
           <p class="code">$CATALINA_HOME/webapps/ROOT/index.jsp</p>
-
-          <p>where "$CATALINA_HOME" is the root of the Tomcat installation directory. If you're seeing this page, and you don't think you should be, then you're either a user who has arrived at new installation of Tomcat, or you're an administrator who hasn't got his/her setup quite right. Providing the latter is the case, please refer to the <a href="/docs">Tomcat Documentation</a> for more detailed setup and administration information than is found in the INSTALL file.</p>
+	  
+          <p>where "$CATALINA_HOME" is the root of the Tomcat installation directory. If you're seeing this page, and you don't think you should be, then you're either a user who has arrived at new installation of Tomcat, or you're an administrator who hasn't got his/her setup quite right. Providing the latter is the case, please refer to the <a href="docs">Tomcat Documentation</a> for more detailed setup and administration information than is found in the INSTALL file.</p>
 
             <p><b>NOTE: For security reasons, using the manager webapp
             is restricted to users with certain roles such as "manager-gui".</b>
@@ -188,16 +206,16 @@
             <p>Tomcat mailing lists are available at the Tomcat project web site:</p>
 
            <ul>
-               <li><b><a href="http://tomcat.apache.org/lists.html#tomcat-users">tomcat-users</a></b> for general questions related to configuring and using Tomcat</li>
-               <li><b><a href="http://tomcat.apache.org/lists.html#tomcat-dev">tomcat-dev</a></b> for developers working on Tomcat</li>
+               <li><b><a href="mailto:users@tomcat.apache.org">users@tomcat.apache.org</a></b> for general questions related to configuring and using Tomcat</li>
+               <li><b><a href="mailto:dev@tomcat.apache.org">dev@tomcat.apache.org</a></b> for developers working on Tomcat</li>
            </ul>
 
             <p>Thanks for using Tomcat!</p>
 
             <p id="footer"><img src="tomcat-power.gif" width="77" height="80" alt="Powered by Tomcat"/><br/>
-            &nbsp;
+	    &nbsp;
 
-            Copyright &copy; 1999-2014 Apache Software Foundation<br/>
+	    Copyright &copy; 1999-2013 Apache Software Foundation<br/>
             All Rights Reserved
             </p>
         </td>

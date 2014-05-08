@@ -25,7 +25,9 @@ import javax.servlet.http.*;
 /**
  * Very Simple test servlet to test compression filter
  * @author Amy Roh
+ * @version $Id: CompressionFilterTestServlet.java 939521 2010-04-30 00:16:33Z kkolinko $
  */
+
 public class CompressionFilterTestServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)

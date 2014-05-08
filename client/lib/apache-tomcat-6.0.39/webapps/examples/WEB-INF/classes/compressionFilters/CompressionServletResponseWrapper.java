@@ -29,7 +29,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
  *
  * @author Amy Roh
  * @author Dmitri Valdin
+ * @version $Id: CompressionServletResponseWrapper.java 939521 2010-04-30 00:16:33Z kkolinko $
  */
+
 public class CompressionServletResponseWrapper extends HttpServletResponseWrapper {
 
     // ----------------------------------------------------- Constructor

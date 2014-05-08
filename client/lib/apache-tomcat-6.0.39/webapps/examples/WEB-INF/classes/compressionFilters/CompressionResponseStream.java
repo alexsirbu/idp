@@ -29,7 +29,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Amy Roh
  * @author Dmitri Valdin
+ * @version $Id: CompressionResponseStream.java 939521 2010-04-30 00:16:33Z kkolinko $
  */
+
 public class CompressionResponseStream
     extends ServletOutputStream {
 
