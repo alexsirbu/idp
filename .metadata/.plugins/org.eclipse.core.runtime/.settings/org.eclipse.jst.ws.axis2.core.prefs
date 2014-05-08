@@ -1,0 +1,4 @@
+axis2RuntimeLocation=/home/cristian/Documents/idp/client/lib/axis2-1.2
+cleintDatabinding=ADB
+eclipse.preferences.version=1
+serviceDatabinding=ADB
