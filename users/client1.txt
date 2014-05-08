@@ -1,3 +1,0 @@
-user-ip: 127.0.0.1
-user-port: 3001
-user-file: test1
