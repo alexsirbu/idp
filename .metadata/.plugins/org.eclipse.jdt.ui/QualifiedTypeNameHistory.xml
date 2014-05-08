@@ -4,4 +4,7 @@
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="server.SharixServerStub.RegisterPeer"/>
 <fullyQualifiedTypeName name="server.SharixServerStub"/>
+<fullyQualifiedTypeName name="sharix.SharixServerStub.UpdatePeerFileList"/>
+<fullyQualifiedTypeName name="sharix.SharixServerStub"/>
+<fullyQualifiedTypeName name="sharix.SharixServerStub.GetPeersResponse"/>
 </qualifiedTypeNameHistroy>
