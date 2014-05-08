@@ -1,7 +1,7 @@
 import org.apache.log4j.*;
 
-import server.SharixServerStub;
-import server.SharixServerStub.RegisterPeer;
+import sharix.SharixServerStub;
+import sharix.SharixServerStub.RegisterPeer;
 
 /*
  * 

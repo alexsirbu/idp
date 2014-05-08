@@ -131,7 +131,7 @@
                prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/>
         -->
 
-      <Context docBase="/home/cristian/Documents/idp/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/ROOT" path="" reloadable="false"/><Context docBase="/home/cristian/Documents/idp/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/server" path="/server" reloadable="true" source="org.eclipse.jst.j2ee.server:server"/></Host>
+      <Context docBase="/home/cristian/Documents/idp/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/ROOT" path="" reloadable="false"/><Context docBase="/home/cristian/Documents/idp/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/sharix" path="/sharix" reloadable="true" source="org.eclipse.jst.j2ee.server:sharix"/></Host>
     </Engine>
   </Service>
 </Server>
