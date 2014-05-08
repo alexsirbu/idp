@@ -31,7 +31,18 @@ public class SharixServer
 		if(SharixServer.peerIPs.size() == 0)
 			return null;
 		
-		return SharixServer.peerIPs.keySet().toArray(new String[0]);
+		String[] result = new String[SharixServer.peerIPs.size()*3];
+		
+		String[] names = SharixServer.peerIPs.keySet().toArray(new String[0]);
+		
+		for (int i=0;i<SharixServer.peerIPs.size();i++)
+		{
+			result[i*3]=names[i];
+			result[i*3+1]=SharixServer.peerIPs.get(names[i]);
+			result[i*3+2]=Integer.toString(SharixServer.peerPorts.get(names[i]));
+		}
+		
+		return result;
 	}
 	
 	public void updatePeerFileList(String name, String[] files)
@@ -53,7 +64,7 @@ public class SharixServer
 		if(!SharixServer.peerFiles.containsKey(name))
 			return null;
 		
-		return (String[])SharixServer.peerFiles.get(name).toArray();
+		return (String[])(SharixServer.peerFiles.get(name).toArray(new String[0]));
 	}
 }
 

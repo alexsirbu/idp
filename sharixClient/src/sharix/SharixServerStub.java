@@ -128,7 +128,7 @@
      */
     public SharixServerStub() throws org.apache.axis2.AxisFault {
         
-                    this("http://172.16.87.1:8080/sharix/services/SharixServer" );
+                    this("http://127.0.0.1:8080/sharix/services/SharixServer" );
                 
     }
 

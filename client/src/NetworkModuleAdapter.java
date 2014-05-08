@@ -1,8 +1,14 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import org.apache.log4j.Logger;
+
+import sharix.SharixServerStub;
+import sharix.SharixServerStub.GetPeerFiles;
+import sharix.SharixServerStub.GetPeerFilesResponse;
+import sharix.SharixServerStub.GetPeersResponse;
 
 
 public class NetworkModuleAdapter implements Observer
@@ -74,6 +80,40 @@ public class NetworkModuleAdapter implements Observer
 				
 				File file = this.mediator.getLocalPeer().getSharedFile(msg.filename);
 				Peer receiver = this.mediator.getPeer(msg.getRequester());
+				
+				if (receiver == null)
+				{
+					try {
+						SharixServerStub serverStub = new SharixServerStub();
+						GetPeersResponse resp = serverStub.getPeers();
+						String[] peersInfo = resp.get_return();
+						mediator.peers.clear();
+						mediator.gui.peersModel.clear();
+						
+						for (int i=0; i<peersInfo.length/3; i++)
+						{
+							String name = peersInfo[i*3];
+							String ip = peersInfo[i*3+1];
+							int port = Integer.parseInt(peersInfo[i*3+2]);
+							
+							GetPeerFiles gpf = new GetPeerFiles();
+							gpf.setName(name);
+							GetPeerFilesResponse gpfr = serverStub.getPeerFiles(gpf);
+							String[] filenames = gpfr.get_return();
+							ArrayList<File> files = new ArrayList<File>();
+							for(int j=0; j<filenames.length; j++)
+								files.add(new File(filenames[j], 0));
+							
+							mediator.addPeer(name, ip, port, files);
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					receiver = this.mediator.getPeer(msg.getRequester());
+				}
+				
 				Peer sender = this.mediator.getLocalPeer();
 				Transfer transfer = new Transfer(file, sender, receiver);
 				

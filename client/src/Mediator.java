@@ -1,6 +1,14 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
+import javax.swing.SwingUtilities;
+
+import org.apache.axis2.AxisFault;
+
+import sharix.SharixServerStub;
+import sharix.SharixServerStub.*;
+
 /*
  * 
  */
@@ -8,7 +16,7 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	private GUI gui;
+	public GUI gui;
 	/*
 	 * 
 	 */
@@ -16,7 +24,7 @@ public class Mediator {
 	/*
 	 * 
 	 */
-	private ArrayList<Peer> peers;
+	public ArrayList<Peer> peers;
 	/*
 	 * 
 	 */
@@ -78,14 +86,40 @@ public class Mediator {
 		
 		ArrayList<File> files = new ArrayList<File>();
 		java.io.File folder = new java.io.File(localPeerRealName);
+		ArrayList<String> fileNames = new ArrayList<String>();
 		for(java.io.File file : folder.listFiles())
+		{
 			files.add(new File(file.getName(), (int)file.length()));
+			fileNames.add(file.getName());
+		}
 			
 		addLocalPeer(this.getLocalPeerRealName(), files);
 		
-		// TODO Stage 3: here or in addLocalPeer, send info to server with my files
-		getPeers();
+		final Mediator mediator = this;
+		final String[] localFileNames = fileNames.toArray(new String[0]);
 		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					System.out.println("register");
+					SharixServerStub serverStub = new SharixServerStub();
+					RegisterPeer rp = new RegisterPeer();
+					rp.setName(mediator.getLocalPeerRealName());
+					rp.setIp(mediator.getLocalPeerIP());
+					rp.setPort(mediator.getLocalPeerPort());
+					serverStub.registerPeer(rp);
+					UpdatePeerFileList upfl = new UpdatePeerFileList();
+					upfl.setName(mediator.getLocalPeerRealName());
+					upfl.setFiles(localFileNames);
+					serverStub.updatePeerFileList(upfl);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		// TODO Stage 3: here or in addLocalPeer, send info to server with my files
+		getPeers();		
 	}
 	
 	/*
@@ -93,38 +127,39 @@ public class Mediator {
 	 */
 	public void getPeers() throws IOException
 	{
-		String IP="";
-		int port=0;
-		String name="";
-		ArrayList<File> files;
+		final Mediator mediator = this;
 		
-		java.io.File folder = new java.io.File(usersFolder);
-		for(java.io.File file : folder.listFiles())
-			if (!file.getName().equals(localPeerRealName+".txt"))
-			{
-				files = new ArrayList<File>();
-				name = file.getName().replaceAll(".txt","");
-				
-				FileOperations fo = new FileOperationsJavaNIO(usersFolder+"/"+file.getName());
-				
-				String configFile = new String(fo.readAll());
-				
-				String[] configs = configFile.split("\n");
-				
-				for (int i=0; i<configs.length; i++)
-				{
-					String[] configMembers = configs[i].split(": ");
-					if (configMembers[0].equals("user-ip"))
-						IP=configMembers[1];
-					else if (configMembers[0].equals("user-port"))
-						port=Integer.parseInt(configMembers[1]);
-					else if (configMembers[0].equals("user-file"))
-						files.add(new File(configMembers[1], (int)new java.io.File(name+"/"+configMembers[1]).length()));
-
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					SharixServerStub serverStub = new SharixServerStub();
+					GetPeersResponse resp = serverStub.getPeers();
+					String[] peersInfo = resp.get_return();
+					mediator.peers.clear();
+					mediator.gui.peersModel.clear();
+					
+					for (int i=0; i<peersInfo.length/3; i++)
+					{
+						String name = peersInfo[i*3];
+						String ip = peersInfo[i*3+1];
+						int port = Integer.parseInt(peersInfo[i*3+2]);
+						
+						GetPeerFiles gpf = new GetPeerFiles();
+						gpf.setName(name);
+						GetPeerFilesResponse gpfr = serverStub.getPeerFiles(gpf);
+						String[] filenames = gpfr.get_return();
+						ArrayList<File> files = new ArrayList<File>();
+						for(int j=0; j<filenames.length; j++)
+							files.add(new File(filenames[j], 0));
+						
+						mediator.addPeer(name, ip, port, files);
+					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				
-				addPeer(name, IP, port, files);
 			}
+		});
 	}
 	
 	/*

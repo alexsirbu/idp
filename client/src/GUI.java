@@ -1,9 +1,17 @@
 import javax.swing.*;
+
+import sharix.SharixServerStub.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import org.apache.axis2.AxisFault;
+
+import sharix.SharixServerStub;
+import sharix.SharixServerStub.UpdatePeerFileList;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 /**
  *
@@ -36,7 +44,8 @@ public class GUI extends JPanel {
 	/*
 	 * 
 	 */
-	private DefaultListModel<Object> peersModel;
+	// TODO: make it better
+	public DefaultListModel<Object> peersModel;
 	/*
 	 * 
 	 */
@@ -153,12 +162,20 @@ public class GUI extends JPanel {
 			}
 		});
 		
+		final Mediator mediator = this.mediator;
+		
 		filesList.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2)
 				{
 				
+					try {
+						mediator.getPeers();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
 					int rows = transfersModel.getRowCount();
 					
 					boolean alreadyDownloading = false;
@@ -186,18 +203,22 @@ public class GUI extends JPanel {
 					if(!alreadyDownloading && !peerName.equals(mediator.getLocalPeerRealName()))
 					{						
 						Peer peer = mediator.getPeer(peerName);
-						Peer myself = mediator.getLocalPeer();
-						File file = peer.getSharedFile(fileName);
 						
-						transfersModel.addRow(new Object[] {
-							peerName,
-							Main.LOCAL_PEER_NAME,
-							fileName,
-							new JProgressBar(0, 100),
-							"Receiving"
-						});
-						
-						mediator.addTransferOutgoingRequest(new Transfer(file, peer, myself));
+						if (peer != null)
+						{
+							Peer myself = mediator.getLocalPeer();
+							File file = peer.getSharedFile(fileName);
+							
+							transfersModel.addRow(new Object[] {
+								peerName,
+								Main.LOCAL_PEER_NAME,
+								fileName,
+								new JProgressBar(0, 100),
+								"Receiving"
+							});
+							
+							mediator.addTransferOutgoingRequest(new Transfer(file, peer, myself));
+						}
 					}
 				}
 					
@@ -235,6 +256,27 @@ public class GUI extends JPanel {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setContentPane(this);
+		
+		final JFrame fframe = frame;
+		final Mediator mediator = this.mediator;
+		
+	    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	    frame.addWindowListener(new WindowAdapter() {
+	        @Override
+	        public void windowClosing(WindowEvent event) {
+	        	try {
+					SharixServerStub serverStub = new SharixServerStub();
+					UnregisterPeer up = new UnregisterPeer();
+					up.setName(mediator.getLocalPeerRealName());
+					serverStub.unregisterPeer(up);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            fframe.dispose();
+	            System.exit(0);
+	        }
+	    });
 	}
 	
 	/*
@@ -336,6 +378,25 @@ public class GUI extends JPanel {
 					public void run() {
 						bar.setValue(ftransfer.getProgress());
 						fgui.transfersTable.repaint();
+						if (ftransfer.getProgress() == 100 && fgui.mediator.getLocalPeerRealName().equals(ftransfer.getReceivingPeer().getName()))
+						{
+							try {
+								SharixServerStub serverStub = new SharixServerStub();
+								Mediator mediator = fgui.mediator;
+								Peer peer = mediator.getLocalPeer();
+								peer.getSharedFiles().add(new File(ftransfer.getFile().getName(), ftransfer.getFile().getSize()));
+								String[] filenames = new String[peer.getSharedFiles().size()];
+								for(int i=0; i<peer.getSharedFiles().size(); i++)
+									filenames[i]=peer.getSharedFiles().get(i).getName();
+								UpdatePeerFileList upfl = new UpdatePeerFileList();
+								upfl.setName(mediator.getLocalPeerRealName());
+								upfl.setFiles(filenames);
+								serverStub.updatePeerFileList(upfl);								
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 					}
 					
 				});
